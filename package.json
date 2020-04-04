@@ -1,0 +1,16 @@
+{
+  "name": "servidortest",
+  "version": "1.0.0",
+  "description": "Servidor para la administración de los test",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7"
+  }
+}
