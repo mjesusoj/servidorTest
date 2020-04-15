@@ -20,8 +20,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">Usuario</label>
                         </div>
-                        <input type="text" class="form-control" placeholder="Usuario" aria-label="Username"
-                            aria-describedby="basic-addon1">
+                        <input class="form-control" type="text" name="usuario" placeholder="Escribe tu usuario aquí"
+                            required>
                     </div>
                 </div>
             </div>
@@ -31,14 +31,17 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">Contraseña</span>
                         </div>
-                        <input class="form-control" type="password" name="inputPassword"
-                            placeholder="Escribe su contrasenia aquí" required>
+                        <input class="form-control" type="password" name="password"
+                            placeholder="Escribe su contraseña aquí" required>
+                    </div>
+                    <div id="respuesta">
+
                     </div>
                 </div>
             </div>
             <div class="mx-auto mt-4 buttons">
-                <button class="btn btn-success iniciar">Iniciar Sesión</button>
-                <button class="btn btn-danger borrar">Borrar</button>
+                <button type="submit" class="btn btn-success iniciar">Iniciar Sesión</button>
+                <button type="reset" class="btn btn-danger borrar">Borrar</button>
             </div>
         </form>
     </div>
