@@ -4,17 +4,20 @@
   "description": "Servidor para la administración de los test",
   "main": "src/index.js",
   "scripts": {
+    "watch": "nodemon",
     "start": "node src/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "blueimp-md5": "^2.13.0",
+    "body-parser": "^1.19.0",
+    "crypto-js": "^4.0.0",
+    "ejs": "^3.1.2",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
-    "jquery": "^3.5.0",
     "jsdom": "^16.2.2",
-    "mongodb": "^3.5.5",
-    "path": "^0.12.7"
+    "mongodb": "^3.5.6",
+    "nodemon": "^2.0.3"
   }
 }

@@ -1,0 +1,46 @@
+#navbar {
+    background-color: darkcyan;
+}
+
+.logo {
+    width: 45px;
+}
+
+.titulo{
+    display: none;
+}
+
+#usuario {
+    margin-top: 10px;
+    color: white;
+}
+
+.iconLogout{
+    color: #FF1110;
+}
+
+@media (min-width: 600px){
+    .titulo{
+        display: block;
+        margin-left: 100px;
+        margin-top: -45px;
+    }
+}
+
+.tarjetaCurso{
+    width: 80px;
+    max-width: 120px;
+}
+
+#enlace{
+    color: #212529;
+}
+
+#enlace:hover{
+    color: #212529;
+    text-decoration: none;
+}
+
+#list-asignaturas, #list-profesores, #list-alumnos{
+    font-size: 1.1em;
+}
