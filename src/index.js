@@ -1,6 +1,5 @@
 const express = require('express');
 const loginRouter = require('./js/login');
-const edicionProfesor = require('./js/edicionProfesor');
 const fs = require('fs');
 const app = express();
 let fichero = __dirname + '/views/login.html';
@@ -21,7 +20,6 @@ app.get('/', (request, response) => {
     }); 
 
     app.use('/', loginRouter);
-    app.use('/administrador/edicionProfesor', edicionProfesor);
 });
 
 app.use('/css', express.static(__dirname + '/css'));

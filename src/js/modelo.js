@@ -136,6 +136,39 @@ async function editarProfesores(idProfesor, nombreProfesor, apellidosProfesor, c
     }
 }
 
+async function editarAlumnos(idAlumno, nombreAlumno, apellidosAlumno, correoAlumno, asignaturasAlumno) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('usuarios');
+        let query = {
+            '_id': objectId(idAlumno)
+        };
+        let newValues = {
+            $set: {
+                'nombre': nombreAlumno,
+                'apellidos': apellidosAlumno,
+                'correo': correoAlumno
+            }
+        };
+        let result = await collection.updateOne(query, newValues);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
 async function mostrarCursos() {
     await infCursos();
     return datosCursos;
@@ -150,5 +183,6 @@ module.exports = {
     "tipoUsuarioMongo": tipoUsuarioMongo,
     "mostrarCursos": mostrarCursos,
     "mostrarUsuarios": mostrarUsuarios,
-    "editarProfesores": editarProfesores
+    "editarProfesores": editarProfesores,
+    "editarAlumnos": editarAlumnos
 }

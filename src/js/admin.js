@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const modelo = require('./modelo');
+const edicionProfesor = require('./edicionProfesor');
+const edicionAlumno = require('./edicionAlumno');
 let datosCursos = '';
 let nombreCursos = [];
 let descripcionCursos = [];
@@ -104,5 +106,8 @@ router.get('/', (request, response) => {
     asignaturasProfesores = [];
   }
 });
+
+router.use('/edicionProfesor', edicionProfesor);
+router.use('/edicionAlumno', edicionAlumno);
 
 module.exports = router;
