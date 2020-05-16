@@ -11,10 +11,8 @@ router.post('/', (request, response) => {
     var apellidosProfesor = request.body.apellidosP;
     var correoProfesor = request.body.correoP;
     var asignaturasProfesor = request.body.asignaturasP;
-
     modelo.editarProfesores(idProfesor, nombreProfesor, apellidosProfesor, correoProfesor, asignaturasProfesor);
-    response.redirect('/administrador');
-    response.end();
+    response.redirect('/administrador/profesores');
 });
 
 module.exports = router;

@@ -1,13 +1,9 @@
 let profesorSeleccionado = '';
 let alumnoSeleccionado = '';
+let cursoSeleccionado = '';
 
 $(document).ready(function () {
-    $('.2º-DAW').click(function () {
-        $('#2º-DAW').tab('show');
-        $('.cursos').hide();
-    });
-
-    $('#list-profesores button').click(function () {
+    $('.editarProfe').click(function () {
         $('#idProfesor').val(this.id);
         profesorSeleccionado = '#' + this.id;
         let contenidoProfesor = '';
@@ -30,7 +26,7 @@ $(document).ready(function () {
         });
     });
 
-    $('#list-alumnos button').click(function () {
+    $('.editarAlumno').click(function () {
         $('#idAlumno').val(this.id);
         alumnoSeleccionado = '#' + this.id;
         let contenidoAlumno = '';
@@ -46,5 +42,19 @@ $(document).ready(function () {
         $('.apellidosAlumno').val(datosAlumno[1]);
         $('.correoAlumno').val(datosAlumno[2]);
         separarCursos = datosAlumno[3].split(',');
+    });
+
+    $('.editarCurso').click(function () {
+        $('#idCurso').val(this.id);
+        cursoSeleccionado = '#' + this.id;
+        let contenidoCurso = $(cursoSeleccionado).parent().children();
+        let datosCurso = [];
+
+        for(let i=0;i<contenidoCurso.length;i++){
+            datosCurso.push(contenidoCurso[i].textContent);
+        }
+
+        $('.nombreCurso').val(datosCurso[0]);
+        $('.descripcionCurso').val(datosCurso[1]);
     });
 });

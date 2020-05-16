@@ -13,7 +13,7 @@ router.post('/', (request, response) => {
     var asignaturasAlumno = request.body.asignaturasA;
 
     modelo.editarAlumnos(idAlumno, nombreAlumno, apellidosAlumno, correoAlumno, asignaturasAlumno);
-    response.redirect('/administrador');
+    response.redirect('/administrador/alumnos');
     response.end();
 });
 

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('./head.html'); -%>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <%- include('./navbar.html'); -%>
+        <div class="row">
+            <%- include('./buttons.html'); -%>
+
+            <div class="col-12 col-md-5 mt-4">
+                <div class="table-responsive-md">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Apellidos</th>
+                                <th scope="col">Correo</th>
+                                <th scope="col">Asignaturas</th>
+                                <th scope="col">Editar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for(let i=0;i<nombreProfesores.length;i++){ %>
+                            <tr>
+                                <td><%= nombreProfesores[i] %></td>
+                                <td><%= apellidosProfesores[i] %></td>
+                                <td><%= correoProfesores[i] %></td>
+                                <td><%= asignaturasProfesores[i] %></td>
+                                <td>
+                                    <button type="button" class="btn btn-success editarProfe" data-toggle="modal"
+                                        data-target="#edicion-profesores" id=<%= idProfesores[i] %>>
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <% } %>
+                            <tr>
+                                <td colspan="5">
+                                    <button type="button" class="btn btn-success nuevoProfe" data-toggle="modal"
+                                        data-target="#nuevo-profesor"><i class="fas fa-plus"></i> Nuevo
+                                        Profesor</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Perfil Usuario -->
+        <%- include('./perfilUsuario.html'); -%>
+
+        <!-- Edición Profesores -->
+        <div class="modal fade" id="edicion-profesores" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edición de Profesores:</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action='/administrador/profesores/edicion' name="formProfesores" method="POST">
+                        <input type="hidden" id="idProfesor" name="idProfesor">
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Nombre</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control nombreProfesor" name="nombreP">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Apellidos</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control apellidosProfesor" name="apellidosP">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Correo</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control correoProfesor" name="correoP">
+                                </div>
+                            </div>
+                            <fieldset disabled>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Asignaturas Asignadas</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="disabledTextInput" class="form-control asignaturasP">
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Asignaturas</label>
+                                <div class="col-sm-10">
+                                    <select multiple class="form-control asignaturasbdProfesor" name="asignaturasbdP">
+        
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Editar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Nuevo Profesor -->
+        <div class="modal fade" id="nuevo-profesor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Nuevo Profesor:</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action='/administrador/profesores/nuevo' name="formNuevoProfesor" method="POST">
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Usuario*</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="newUsuarioP" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Nombre*</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="newNombreP" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Apellidos*</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="newApellidosP" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Contraseña*</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" name="newPasswordP" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Correo*</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control" name="newCorreoP" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Asignaturas*</label>
+                                <div class="col-sm-10">
+                                    <select multiple class="form-control" name="newAsignaturasP">
+                                        <option>DIW</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Añadir</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('./scripts.html'); -%>
+    <script src="../js/rellenarDatos.js"></script>
+</body>
+
+</html>

@@ -136,7 +136,7 @@ async function editarProfesores(idProfesor, nombreProfesor, apellidosProfesor, c
     }
 }
 
-async function editarAlumnos(idAlumno, nombreAlumno, apellidosAlumno, correoAlumno, asignaturasAlumno) {
+async function editarAlumnos(idAlumno, nombreAlumno, apellidosAlumno, correoAlumno, cursoAlumno) {
     const client = await MongoClient.connect(urlMongo, {
             useUnifiedTopology: true
         })
@@ -169,6 +169,119 @@ async function editarAlumnos(idAlumno, nombreAlumno, apellidosAlumno, correoAlum
     }
 }
 
+async function newProfesor(newUsuarioP, newNombreP, newApellidosP, newPasswordP, newCorreoP, newAsignaturasP) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('usuarios');
+        let query = {
+            'tipo': 1,
+            'usuario': newUsuarioP,
+            'nombre': newNombreP,
+            'apellidos': newApellidosP,
+            'password': newPasswordP,
+            'correo': newCorreoP,
+            'asignaturas':[
+                newAsignaturasP
+            ]
+        };
+        let result = await collection.insertOne(query);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, newCorreoA, newAsignaturasA) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('usuarios');
+        let query = {
+            'tipo': 2,
+            'usuario': newUsuarioA,
+            'nombre': newNombreA,
+            'apellidos': newApellidosA,
+            'password': newPasswordA,
+            'correo': newCorreoA,
+            'asignaturas':[
+                newAsignaturasA
+            ]
+        };
+        let result = await collection.insertOne(query);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function editarCurso(idCurso, nombreCurso, descripcionCurso, imgCurso) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('cursos');
+        let query = {
+            '_id': objectId(idCurso)
+        };
+        let newValues = '';
+
+        if(imgCurso!=''){
+            newValues = {
+                $set: {
+                    'nombre': nombreCurso,
+                    'descripcion': descripcionCurso,
+                    'img': imgCurso
+                }
+            };
+        }else{
+            newValues = {
+                $set: {
+                    'nombre': nombreCurso,
+                    'descripcion': descripcionCurso
+                }
+            };
+        }
+
+        let result = await collection.updateOne(query, newValues);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
 async function mostrarCursos() {
     await infCursos();
     return datosCursos;
@@ -184,5 +297,8 @@ module.exports = {
     "mostrarCursos": mostrarCursos,
     "mostrarUsuarios": mostrarUsuarios,
     "editarProfesores": editarProfesores,
-    "editarAlumnos": editarAlumnos
+    "editarAlumnos": editarAlumnos,
+    "newProfesor": newProfesor,
+    "newAlumno": newAlumno,
+    "editarCurso": editarCurso
 }

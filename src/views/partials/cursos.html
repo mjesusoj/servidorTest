@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('./head.html'); -%>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <%- include('./navbar.html'); -%>
+        
+        <div class="row">
+            <%- include('./buttons.html'); -%>
+
+            <div class="col-12 col-md-5 mt-4">
+                <div class="card-deck">
+                    <% for(let i=0;i<nombreCursos.length;i++){ %>
+                    <div class="card">
+                        <form action="/administrador/cursos/curso" method="get" id=<%= nombreCursos[i] %>>
+                            <img class="img-fluid imagenCurso card-img-top" alt="Tom Nook le flipan las bayas"
+                                src=<%= imgCursos[i] %>>
+                            <div class="card-body tarjetaCursos">
+                                <h5 class="card-title mt-2"><%= nombreCursos[i] %></h5>
+                                <p class="card-text"><%= descripcionCursos[i] %></p>
+                                <button class="btn btn-success editarCurso" data-toggle="modal" 
+                                data-target="#list-cursos" id=<%= idCursos[i] %>>
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-sign-in-alt"></i> Ir
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="list-cursos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Curso</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/administrador/cursos/curso/edicion" method="post">
+                    <input type="hidden" id="idCurso" name="idCurso">
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Nombre</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control nombreCurso" name="nombreC">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Descripción</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control descripcionCurso" name="descripcionC">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Imagen <i class="fas fa-link"></i></label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control imgCurso" name="imagenC" placeholder="inserte link">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <%- include('./scripts.html'); -%>
+    <script src="../js/editarBotones.js"></script>
+    <script src="../js/rellenarDatos.js"></script>
+</body>
+
+</html>
