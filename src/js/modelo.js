@@ -6,6 +6,8 @@ const paginaError = require('./error');
 let tipoUsuario = '';
 let datosCursos = '';
 let datosUsuarios = '';
+let datosAsignaturas = '';
+let datosTemas = '';
 
 async function tipoUsuarioMongo(usuario, password, response) {
     const client = await MongoClient.connect(urlMongo, {
@@ -191,7 +193,7 @@ async function newProfesor(newUsuarioP, newNombreP, newApellidosP, newPasswordP,
             'apellidos': newApellidosP,
             'password': newPasswordP,
             'correo': newCorreoP,
-            'asignaturas':[
+            'asignaturas': [
                 newAsignaturasP
             ]
         };
@@ -225,7 +227,7 @@ async function newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, n
             'apellidos': newApellidosA,
             'password': newPasswordA,
             'correo': newCorreoA,
-            'asignaturas':[
+            'asignaturas': [
                 newAsignaturasA
             ]
         };
@@ -257,7 +259,7 @@ async function editarCurso(idCurso, nombreCurso, descripcionCurso, imgCurso) {
         };
         let newValues = '';
 
-        if(imgCurso!=''){
+        if (imgCurso != '') {
             newValues = {
                 $set: {
                     'nombre': nombreCurso,
@@ -265,7 +267,7 @@ async function editarCurso(idCurso, nombreCurso, descripcionCurso, imgCurso) {
                     'img': imgCurso
                 }
             };
-        }else{
+        } else {
             newValues = {
                 $set: {
                     'nombre': nombreCurso,
@@ -275,6 +277,89 @@ async function editarCurso(idCurso, nombreCurso, descripcionCurso, imgCurso) {
         }
 
         let result = await collection.updateOne(query, newValues);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function newCurso(newNombreCurso, newDescripcionCurso, newImgCurso) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('cursos');
+        let query = {
+            'nombre': newNombreCurso,
+            'descripcion': newDescripcionCurso,
+            'img': newImgCurso
+        }
+        let result = await collection.insertOne(query);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function infAsignaturas(idCurso) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('cursos');
+        let query = {
+            '_id': objectId(idCurso)
+        };
+        let result = await collection.find(query).toArray();
+        datosAsignaturas = result;
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function infTemas(idCurso, nombreAsignatura) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('cursos');
+        let query = {
+            '_id': objectId(idCurso),
+            'asignaturas.nombre': nombreAsignatura
+        };
+        let result = await collection.find(query).toArray();
+        datosTemas = result;
     } catch (error) {
         console.log(error);
     } finally {
@@ -292,6 +377,16 @@ async function mostrarUsuarios(numero) {
     return datosUsuarios;
 }
 
+async function mostrarAsignaturas(idCurso) {
+    await infAsignaturas(idCurso);
+    return datosAsignaturas;
+}
+
+async function mostrarTemas(idCurso, nombreAsignatura) {
+    await infTemas(idCurso, nombreAsignatura);
+    return datosTemas;
+}
+
 module.exports = {
     "tipoUsuarioMongo": tipoUsuarioMongo,
     "mostrarCursos": mostrarCursos,
@@ -300,5 +395,8 @@ module.exports = {
     "editarAlumnos": editarAlumnos,
     "newProfesor": newProfesor,
     "newAlumno": newAlumno,
-    "editarCurso": editarCurso
+    "editarCurso": editarCurso,
+    "newCurso": newCurso,
+    "mostrarAsignaturas": mostrarAsignaturas,
+    "mostrarTemas": mostrarTemas
 }

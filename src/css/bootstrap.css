@@ -10050,7 +10050,7 @@ a.text-secondary:hover, a.text-secondary:focus {
 }
 
 .text-success {
-  color: #28a745 !important;
+  color: darkcyan !important;
 }
 
 a.text-success:hover, a.text-success:focus {

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('./head.html'); -%>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <%- include('./navbar.html'); -%>
+
+        <div class="row">
+            <%- include('./buttons.html'); -%>
+            <div class="col-12 col-md-5 mt-4">
+                <h2 class="text-success"><%= nombreCurso %></h2>
+                <div class="table-responsive-md">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Editar</th>
+                                <th scope="col">Ir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for(let i=0;i<nombreAsignaturas.length;i++){ %>
+                            <tr>
+                                <td><%= nombreAsignaturas[i] %></td>
+                                <td>
+                                    <button type="button" class="btn btn-success editarAsignatura" data-toggle="modal"
+                                        data-target="#edicion-asignaturas">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <form action="/administrador/cursos/curso/asignatura" method="POST" id=<%= nombreAsignaturas[i] %>>
+                                        <input type="hidden" name="nombre" value=<%= nombreAsignaturas[i] %>>
+                                        <button class="btn btn-primary" type="submit"><i class="fas fa-sign-in-alt"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% } %>
+                            <tr>       
+                                <td colspan="3">                
+                                    <p><%= mensajedbVacio %></p>                    
+                                    <button type="button" class="btn btn-success nuevaAsignatura" data-toggle="modal"
+                                    data-target="#nueva-asignatura"><i class="fas fa-plus"></i> Nueva
+                                    Asignatura</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Perfil Usuario -->
+    <%- include('./perfilUsuario.html'); -%>
+
+    <!-- Edición Asignaturas -->
+    <div class="modal fade" id="edicion-asignaturas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edición de Asignaturas:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action='/administrador/cursos/curso/edicion' name="formAsignaturas" method="POST">
+                    <input type="hidden" id="idAsignatura" name="idAsignatura">
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Nombre</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control nombreAsignatura" name="nombreAsignatura">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Editar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Nuevo Asignatura -->
+    <div class="modal fade" id="nueva-asignatura" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Nuevo Asignatura:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action='/administrador/cursos/curso/nuevo' name="formNuevaAsignatura" method="POST">
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Nombre*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="newNombreP" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Añadir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <%- include('./scripts.html'); -%>
+</body>
+
+</html>

@@ -27,9 +27,9 @@
     }
 }
 
-.tarjetaCurso{
-    width: 80px;
-    max-width: 120px;
+.imagenCurso{
+    max-width: 300px;
+    max-height: 200px;
 }
 
 #enlace{
