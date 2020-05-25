@@ -3,32 +3,38 @@
 
 <head>
     <%- include('./head.html'); -%>
-    <style>
-        .listBotones {
-            width: 200px;
-        }
-    </style>
+    <title>Administración - Cursos</title>
+    <link rel="stylesheet" type="text/css" href="../../css/cursos.css">
 </head>
 
 <body>
     <div class="container-fluid">
         <%- include('./navbar.html'); -%>
-        <div class="row float-left">
-            <%- include('./buttons.html'); -%>
+        <div class="row float-left botones">
+            <div class="col-12 col-md-6 mt-4">
+                <%- include('./buttons.html'); -%>
+                <button class="btn btn-success mt-4 nuevoCurso" data-toggle="modal" data-target="#list-nuevo">
+                    <i class="fas fa-plus" aria-hidden="true"></i> Nuevo Curso
+                </button>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-success mt-2 borrarCurso" data-toggle="modal" data-target="#list-cursos-delete">
+                    <i class="fas fa-trash-alt iconBorrarCurso"></i> Borrar
+                </button>
+            </div>
         </div>
         <div class="row">
             <% for(let i=0;i<nombreCursos.length;i++){ %>
-            <div class="col-12 col-sm-6 col-md-2 mt-4">
+            <div class="col-12 col-sm-5 col-md-4 col-lg-3 col-xl-2 mt-4">
                 <div class="card">
-                    <form action="/administrador/cursos/curso" method="POST" id=<%= nombreCursos[i] %>>
-                        <input type="hidden" name="nombreCurso" value=<%= nombreCursos[i] %>>
-                        <input type="hidden" name="idCurso" value=<%= idCursos[i] %>>
-                        <img class="img-fluid imagenCurso card-img-top" alt="Imagen del curso" src=<%= imgCursos[i] %>>
+                    <form action="/administrador/cursos/curso" class="formularioCursos" method="GET">
+                        <input type="hidden" name="nombre" value=<%= nombreCursos[i] %>>
+                        <img class="img-fluid imagenCurso card-img-top" src=<%= imgCursos[i] %>>
                         <div class="card-body">
                             <h5 class="card-title mt-2"><%= nombreCursos[i] %></h5>
                             <p class="card-text"><%= descripcionCursos[i] %></p>
                             <button class="btn btn-success editarCurso" data-toggle="modal" data-target="#list-cursos"
-                                id=<%= idCursos[i] %>>
+                                id=<%= nombreCursos[i] %>>
                                 <i class="fas fa-edit"></i> Editar
                             </button>
                             <button class="btn btn-primary" type="submit">
@@ -40,17 +46,11 @@
             </div>
             <% } %>
         </div>
-        <div class="float-right">
-            <div class="col-12 col-md-12">
-                <button class="btn btn-success mt-4 nuevoCurso" data-toggle="modal" data-target="#list-nuevo">
-                    <i class="fas fa-plus" aria-hidden="true"></i> Nuevo Curso
-                </button>
-            </div>
-        </div>
     </div>
     <!-- Perfil Usuario -->
     <%- include('./perfilUsuario.html'); -%>
 
+    <!-- Edición Curso -->
     <div class="modal fade" id="list-cursos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -61,13 +61,13 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="/administrador/cursos/curso/edicion" method="post">
-                    <input type="hidden" id="idCurso" name="idCurso">
+                <form action="/administrador/cursos/edicion" method="post">
+                    <input type="hidden" id="nombreCurso" name="nombreCurso">
                     <div class="modal-body">
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Nombre</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control nombreCurso" name="nombreC" required>
+                                <input type="text" class="form-control editNombreCurso" name="editNombreC" required>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -86,12 +86,14 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Guardar
+                            cambios</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    <!-- Nuevo Curso -->
     <div class="modal fade" id="list-nuevo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -102,7 +104,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="/administrador/cursos/curso/nuevo" method="post">
+                <form action="/administrador/cursos/nuevo" method="post">
                     <div class="modal-body">
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Nombre</label>
@@ -132,8 +134,41 @@
             </div>
         </div>
     </div>
+    <!-- Borrar Curso -->
+    <div class="modal fade" id="list-cursos-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Borrar Curso</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/administrador/cursos/borrar" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect2">Seleccione curso a borrar</label>
+                            <select class="form-control" name="selectCursos">
+                                <% for(let i=0;i<nombreCursos.length;i++){ %>
+                                    <option><%= nombreCursos[i] %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success borrarCurso">
+                            <i class="fas fa-trash-alt iconBorrarCurso"></i> Borrar
+                        </button>
+                        <button type="button" class="btn btn-primary volverCurso" data-dismiss="modal">
+                            <i class="fas fa-undo"></i> No
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <%- include('./scripts.html'); -%>
-    <script src="../js/editarBotones.js"></script>
     <script src="../js/rellenarDatos.js"></script>
 </body>
 

@@ -3,14 +3,16 @@
 
 <head>
     <%- include('./head.html'); -%>
+    <link rel="stylesheet" type="text/css" href="../../../css/admin.css">
 </head>
 
 <body>
     <div class="container-fluid">
         <%- include('./navbar.html'); -%>
         <div class="row">
-            <%- include('./buttons.html'); -%>
-
+            <div class="col-12 col-md-2 mt-4">
+                <%- include('./buttons.html'); -%>
+            </div>
             <div class="col-12 col-md-5 mt-4">
                 <div class="table-responsive-md">
                     <table class="table">

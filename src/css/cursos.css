@@ -1,0 +1,65 @@
+#navbar {
+    background-color: darkcyan;
+}
+
+.logo {
+    width: 45px;
+}
+
+.titulo{
+    display: none;
+}
+
+#usuario {
+    margin-top: 10px;
+    color: white;
+}
+
+.iconLogout{
+    color: #FF1110;
+}
+
+#enlace{
+    color: #212529;
+}
+
+#enlace:hover{
+    color: #212529;
+    text-decoration: none;
+}
+
+#list-asignaturas, #list-profesores, #list-alumnos{
+    font-size: 1.1em;
+}
+
+.iconBorrarCurso{
+    color: #f8752a;
+}
+
+@media (min-width: 600px){
+    .titulo{
+        display: block;
+        margin-left: 100px;
+        margin-top: -45px;
+    }
+}
+
+
+@media (max-width: 576px){
+    .botones{
+        float: none !important;
+    }    
+}
+
+@media (min-width: 576px){
+    .listBotones {
+        width: 200px;
+    }
+}
+
+@media (min-width: 992px){
+    .imagenCurso{
+        max-width: 400px;
+        max-height: 200px;
+    }
+}
