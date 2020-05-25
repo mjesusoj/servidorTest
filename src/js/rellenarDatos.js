@@ -33,7 +33,6 @@ $(document).ready(function () {
         alumnoSeleccionado = '#' + this.id;
         let contenidoAlumno = '';
         let datosAlumno = [];
-        let cursos = [];
         let separarCursos = '';
         for (let i=0;i<4;i++){
             contenidoAlumno = $(alumnoSeleccionado).parent().parent().children()[i];
@@ -51,7 +50,7 @@ $(document).ready(function () {
            el id del botón de editarCurso */
         $('#nombreCurso').val(this.id);
         cursoSeleccionado = '#' + this.id;
-        let contenidoCurso = $(cursoSeleccionado).parent().parent().parent().children();
+        let contenidoCurso = $(cursoSeleccionado).parent().children();
         let datosCurso = [];
 
         for(let i=0;i<contenidoCurso.length;i++){
