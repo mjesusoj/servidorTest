@@ -1,9 +1,14 @@
 #navbar {
     background-color: darkcyan;
+    font-family: 'News Cycle', sans-serif;
+}
+
+.botones, .fuente, .fuenteModal{
+    font-family: 'Varela Round', sans-serif;
 }
 
 .logo {
-    width: 45px;
+    width: 60px;
 }
 
 .titulo{

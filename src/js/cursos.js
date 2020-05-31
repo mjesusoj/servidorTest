@@ -12,7 +12,10 @@ let datosA = '';
 let nombreAsignaturas = [];
 let nombreAsignatura = '';
 let mensajedbVacio = '';
-let nombreTemas = '';
+let nombreTema = '';
+let nombreTemas = [];
+let nombreTests = [];
+let datosT = '';
 
 router.use(bodyParser.urlencoded({ extended: false }));
 
@@ -75,8 +78,13 @@ router.get('/curso', (request, response) => {
 
 // Cargar los temas
 router.get('/curso/asignatura', (request, response) => {
-    nombreAsignatura = request.query.nombre;
-    cargar();
+    if (request.query.nombre != undefined){
+        nombreAsignatura = request.query.nombre;
+        cargar();
+    }else{
+        cargar();
+    }
+    
     async function cargar(){
         await infTemas();
         cargarTemas(response);
@@ -100,9 +108,25 @@ router.get('/curso/asignatura/edicion', (request, response) => {
 
 // Borrar asignatura
 router.get('/curso/asignatura/borrar', (request, response) => {
-    let asignaturaSeleccionada = request.query.selectAsignaturas;
+    let asignaturaSeleccionada = request.query.select;
     modelo.borrarAsignatura(nombreCurso, asignaturaSeleccionada);
     response.redirect('/administrador/cursos/curso');
+});
+
+// Ver el contenido de los temas
+router.get('/curso/asignatura/tema', (request, response) => {
+    if (request.query.nombre != undefined){
+        nombreTema = request.query.nombre;
+        cargar();
+    }else{
+        cargar();
+    }
+    
+    async function cargar(){
+        await infTests();
+        cargarTests(response, nombreTema);
+        nombreTests = [];
+    }
 });
 
 // Nuevo tema
@@ -115,16 +139,38 @@ router.get('/curso/asignatura/tema/nuevo', (request, response) => {
 // Editar los temas de las asignaturas
 router.get('/curso/asignatura/tema/edicion', (request, response) => {
     let nombreTema = request.query.nombreTema;
-    let editNombreT = request.query.editNombreA;
+    let editNombreT = request.query.editNombre;
     modelo.editarTema(nombreCurso, nombreTema, editNombreT);
     response.redirect('/administrador/cursos/curso/asignatura');
 });
 
 // Borrar tema
 router.get('/curso/asignatura/tema/borrar', (request, response) => {
-    let temaSeleccionado = request.query.selectTemas;
+    let temaSeleccionado = request.query.select;
     modelo.borrarTema(nombreCurso, temaSeleccionado);
     response.redirect('/administrador/cursos/curso/asignatura');
+});
+
+// Nuevo test
+router.get('/curso/asignatura/tema/test/nuevo', (request, response) => {
+    let newNombreTest = request.query.newNombre;
+    modelo.newTest(nombreCurso, nombreAsignatura, nombreTema, newNombreTest);
+    response.redirect('/administrador/cursos/curso/asignatura/tema');
+});
+
+// Editar los tests de las temas
+router.get('/curso/asignatura/tema/test/edicion', (request, response) => {
+    let nombreTest = request.query.nombreTema;
+    let editNombreT = request.query.editNombre;
+    modelo.editarTest(nombreCurso, nombreTest, editNombreT);
+    response.redirect('/administrador/cursos/curso/asignatura/tema');
+});
+
+// Borrar tests
+router.get('/curso/asignatura/tema/test/borrar', (request, response) => {
+    let testSeleccionado = request.query.select;
+    modelo.borrarTest(nombreCurso, testSeleccionado);
+    response.redirect('/administrador/cursos/curso/asignatura/tema');
 });
 
 async function infCursos() {
@@ -172,6 +218,7 @@ function cargarAsignaturas(response, nombreCurso) {
         tituloEdicion: 'Edición de Asignatura',
         tituloNew: 'Nueva Asignatura',
         tituloBorrar: 'Borrar Asignatura',
+        direccionJSNuevaPag: '/administrador/cursos/curso/asignatura',
         direccionJSEdicion: '/administrador/cursos/curso/asignatura/edicion',
         direccionJSNueva: '/administrador/cursos/curso/asignatura/nueva',
         direccionJSBorrar: '/administrador/cursos/curso/asignatura/borrar'
@@ -189,11 +236,8 @@ async function infTemas() {
         for (let i=0; i<datosTemas.length; i++){
             nombreTemas.push(datosTemas[i]);
         }
-
-        console.log(datosTem);
-        console.log(nombreTemas);
     }catch{
-        mensajedbVacio = 'No hay asignaturas (Pulsa en "Nueva Asignatura", para añadir una)';
+        mensajedbVacio = 'No hay temas (Pulsa en "Nuevo Tema", para añadir uno)';
     }
 }
 
@@ -207,9 +251,43 @@ function cargarTemas(response) {
         tituloEdicion: 'Edición de Tema',
         tituloNew: 'Nuevo Tema',
         tituloBorrar: 'Borrar Tema',
+        direccionJSNuevaPag: '/administrador/cursos/curso/asignatura/tema',
         direccionJSEdicion: '/administrador/cursos/curso/asignatura/tema/edicion',
         direccionJSNueva: '/administrador/cursos/curso/asignatura/tema/nuevo',
         direccionJSBorrar: '/administrador/cursos/asignatura/tema/borrar'
+    });
+    vaciarArrays();
+    mensajedbVacio = '';
+}
+
+async function infTests() {
+    datosT = await modelo.mostrarTests(nombreAsignatura, nombreTema);
+    let datosTest = Object.values(datosT)[0];
+    let datosTests = Object.values(datosTest)[0];
+    
+    try{
+        for (let i=0; i<datosTests.length; i++){
+            nombreTests.push(datosTests[i]);
+        }
+    }catch{
+        mensajedbVacio = 'No hay tests (Pulsa en "Nuevo test", para añadir uno)';
+    }
+}
+
+function cargarTests(response) {
+    response.render('./partials/asignaturas.html', {
+        usuarioPerfil: 'administrador',
+        correoPerfil: 'administrador@admin.com',
+        nombre1: nombreTema,
+        nombre2: nombreTests,
+        mensajedbVacio: mensajedbVacio,
+        tituloEdicion: 'Edición de Test',
+        tituloNew: 'Nuevo Test',
+        tituloBorrar: 'Borrar Test',
+        direccionJSNuevaPag: '/administrador/cursos/curso/asignatura/tema/test',
+        direccionJSEdicion: '/administrador/cursos/curso/asignatura/tema/test/edicion',
+        direccionJSNueva: '/administrador/cursos/curso/asignatura/tema/test/nuevo',
+        direccionJSBorrar: '/administrador/cursos/asignatura/tema/test/borrar'
     });
     vaciarArrays();
     mensajedbVacio = '';
@@ -220,6 +298,7 @@ function vaciarArrays() {
     descripcionCursos = [];
     imgCursos = [];
     nombreTemas = [];
+    nombreTests = [];
 }
 
 module.exports = router;

@@ -4,62 +4,64 @@
 <head>
     <%- include('./head.html'); -%>
     <title>Administración - Asignaturas</title>
-    <link rel="stylesheet" type="text/css" href="../../../css/asignaturas.css">
+    <link rel="stylesheet" type="text/css" href="../../../../../css/asignaturas.css">
 </head>
 
 <body>
     <div class="container-fluid">
         <%- include('./navbar.html'); -%>
-        <div class="row float-left botones">
-            <div class="col-12 col-sm-9 col-md-8 mt-4">
-                <%- include('./buttons.html'); -%>
-                <button class="btn btn-success mt-3 nuevo" data-toggle="modal" data-target="#nuevo">
-                    <i class="fas fa-plus"></i> <%= tituloNew %>
-                </button>
-                <button class="btn btn-success mt-3 borrar" data-toggle="modal" data-target="#list-delete">
-                    <i class="fas fa-trash-alt iconBorrar"></i> Borrar
-                </button>
+        <div class="fuente">
+            <div class="row float-left botones">
+                <div class="col-12 col-sm-9 col-md-8 mt-4">
+                    <%- include('./buttons.html'); -%>
+                    <button class="btn btn-success mt-3 nuevo" data-toggle="modal" data-target="#nuevo">
+                        <i class="fas fa-plus"></i> <%= tituloNew %>
+                    </button>
+                    <button class="btn btn-success mt-3 borrar" data-toggle="modal" data-target="#list-delete">
+                        <i class="fas fa-trash-alt iconBorrar"></i> Borrar
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12 col-md-5 mt-4">
-                <h2 class="text-success"><%= nombre1 %></h2>
-                <div class="table-responsive-md">
-                    <table class="table">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">Editar</th>
-                                <th scope="col">Ir</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% for(let i=0;i<nombre2.length;i++){ %>
-                            <tr>
-                                <td><%= nombre2[i] %></td>
-                                <td>
-                                    <button type="button" class="btn btn-success editar2" data-toggle="modal"
-                                        data-target="#edicion" id=<%= nombre2[i] %>>
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </td>
-                                <td>
-                                    <form action="/administrador/cursos/curso/asignatura" method="GET">
-                                        <input type="hidden" name="nombre" value=<%= nombre2[i] %>>
-                                        <button class="btn btn-primary" type="submit">
-                                            <i class="fas fa-sign-in-alt"></i>
+            <div class="row">
+                <div class="col-12 col-md-5 mt-4">
+                    <h2 class="text-success"><%= nombre1 %></h2>
+                    <div class="table-responsive-md">
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Editar</th>
+                                    <th scope="col">Ir</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(let i=0;i<nombre2.length;i++){ %>
+                                <tr>
+                                    <td><%= nombre2[i] %></td>
+                                    <td>
+                                        <button type="button" class="btn btn-success editar2" data-toggle="modal"
+                                            data-target="#edicion" id=<%= nombre2[i] %>>
+                                            <i class="fas fa-edit"></i>
                                         </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <% } %>
-                            <tr>
-                                <td colspan="3">
-                                    <p><%= mensajedbVacio %></p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    </td>
+                                    <td>
+                                        <form method="GET" action=<%= direccionJSNuevaPag %>>
+                                            <input type="hidden" name="nombre" value=<%= nombre2[i] %>>
+                                            <button class="btn btn-primary" type="submit">
+                                                <i class="fas fa-sign-in-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <% } %>
+                                <tr>
+                                    <td colspan="3">
+                                        <p><%= mensajedbVacio %></p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -90,7 +92,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Guardar cambios</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Guardar
+                            cambios</button>
                     </div>
                 </form>
             </div>
@@ -138,7 +141,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="seleccionBorrar">Seleccione para borrar</label>
-                            <select class="form-control" name="selectAsignaturas">
+                            <select class="form-control" name="select">
                                 <% for(let i=0;i<nombre2.length;i++){ %>
                                 <option value=<%= nombre2[i] %>><%= nombre2[i] %></option>
                                 <% } %>
@@ -159,7 +162,7 @@
     </div>
 
     <%- include('./scripts.html'); -%>
-    <script src="../../js/rellenarDatos.js"></script>
+    <script src="../../../../js/rellenarDatos.js"></script>
 </body>
 
 </html>

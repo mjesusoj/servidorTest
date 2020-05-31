@@ -9,6 +9,7 @@ let datosAsignaturas = '';
 let datosTemas = '';
 let resultadoCurso = '';
 let arrayNombreCurso = [];
+let datosTests = '';
 let palabraRemplazada = '';
 
 async function tipoUsuarioMongo(usuario, password, response) {
@@ -102,7 +103,13 @@ async function infUsuarios(numero) {
             let query = {
                 'tipo': numero
             };
-            let result = await collection.find(query).toArray();
+            let datos = {
+                projection: {
+                    '_id': 0,
+                    'password': 0
+                }
+            };
+            let result = await collection.find(query, datos).toArray();
             datosUsuarios = result;
         } catch (error) {
             console.log(error);
@@ -147,7 +154,7 @@ async function editarProfesores(nombreProfesor, apellidosProfesor, correoProfeso
     }
 }
 
-async function editarAlumnos(idAlumno, nombreAlumno, apellidosAlumno, correoAlumno, cursoAlumno) {
+async function editarAlumnos(nombreAlumno, apellidosAlumno, correoAlumno, cursoAlumno) {
     const client = await MongoClient.connect(urlMongo, {
             useUnifiedTopology: true
         })
@@ -412,6 +419,30 @@ async function borrarCurso(cursoSeleccionado) {
     try {
         const db = client.db("administraciontest");
         let collection = db.collection('asignaturas');
+        let query = {
+            'curso': cursoSeleccionado
+        };
+        await collection.deleteMany(query);
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Borrar temas
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('temas');
+        let query = {
+            'curso': cursoSeleccionado
+        };
+        await collection.deleteMany(query);
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Borrar tests
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('tests');
         let query = {
             'curso': cursoSeleccionado
         };
@@ -732,7 +763,8 @@ async function newTema(nombreCurso, nombreAsignatura, nombreTema) {
         let collection = db.collection('temas');
         let query = {
             'nombre': palabraRemplazada,
-            'asignatura': nombreAsignatura
+            'asignatura': nombreAsignatura,
+            'curso': nombreCurso
         };
 
         await collection.insertOne(query);
@@ -744,6 +776,196 @@ async function newTema(nombreCurso, nombreAsignatura, nombreTema) {
 }
 
 async function borrarTema(nombreCurso, temaSeleccionado) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    remplazarEspacio(temaSeleccionado);
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('cursos');
+        let query = {
+            'nombre': temaSeleccionado,
+            'curso': nombreCurso
+        };
+        let newAsignatura = {
+            $pull: {
+                'asignaturas': {
+                    $in: [palabraRemplazada]
+                }
+            }
+        }
+
+        await collection.updateOne(query, newAsignatura);
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Insertamos en la colección asignaturas una nueva, identificado con el curso
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('asignaturas');
+        let query = {
+            'nombre': palabraRemplazada,
+            'curso': nombreCurso
+        };
+
+        await collection.deleteOne(query);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function infTests(nombreAsignatura, nombreTema) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('temas');
+        let query = {
+            'nombre': nombreTema,
+            'asignatura': nombreAsignatura,
+        };
+        let temas = {
+            projection: {
+                '_id': 0,
+                'tests': 1
+            }
+        }
+        let result = await collection.find(query, temas).toArray();
+        datosTests = result;
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function editarTest(nombreCurso, nombreTema, editNombreT) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    remplazarEspacio(editNombreT);
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('cursos');
+        let query = {
+            'nombre': nombreCurso
+        };
+        let newValues = {
+            $set: {
+                'asignaturas': {
+                    $in: [palabraRemplazada]
+                }
+            }
+        }
+        await collection.updateOne(query, newValues);
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('asignaturas');
+        let query = {
+            'nombre': nombreTema,
+            'curso': nombreCurso
+        };
+        let newValues = {
+            $set: {
+                'nombre': palabraRemplazada
+            }
+        }
+        await collection.updateOne(query, newValues);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function newTest(nombreCurso, nombreAsignatura, nombreTema, newNombreTest) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    remplazarEspacio(newNombreTest);
+
+    // Le insertamos una nueva asignatura al curso
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('temas');
+        let query = {
+            'nombre': nombreTema,
+            'asignatura': nombreAsignatura,
+            'curso': nombreCurso
+        };
+        let newTema = {
+            $push: {
+                'tests': palabraRemplazada
+            }
+        }
+
+        await collection.updateOne(query, newTema);
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Le insertamos una nueva asignatura al curso
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('tests');
+        let query = {
+            'nombre': palabraRemplazada,
+            'tema': nombreTema,
+            'asignatura': nombreAsignatura,
+            'curso': nombreCurso
+        };
+
+        await collection.insertOne(query);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function borrarTest(nombreCurso, temaSeleccionado) {
     const client = await MongoClient.connect(urlMongo, {
             useUnifiedTopology: true
         })
@@ -814,6 +1036,11 @@ async function mostrarTemas(nombreCurso, nombreAsignatura) {
     return datosTemas;
 }
 
+async function mostrarTests(nombreCurso, nombreAsignatura, nombreTema) {
+    await infTests(nombreCurso, nombreAsignatura, nombreTema);
+    return datosTests;
+}
+
 /*
     Función para remplazar el espacio por guiones,
     para el funcionamiento correcto de la aplicación
@@ -821,7 +1048,6 @@ async function mostrarTemas(nombreCurso, nombreAsignatura) {
 function remplazarEspacio(palabra){
     let re = / /gi;
     palabraRemplazada = palabra.replace(re, '-');
-    console.log("Palabra Remplazada " + palabraRemplazada);
 }
 
 function cursoRepetido() {
@@ -845,5 +1071,8 @@ module.exports = {
     "borrarAsignatura": borrarAsignatura,
     "mostrarTemas": mostrarTemas,
     "newTema": newTema,
+    "borrarTema": borrarTema,
+    "mostrarTests": mostrarTests,
+    "newTest": newTest, 
     "cursoRepetido": cursoRepetido
 }
