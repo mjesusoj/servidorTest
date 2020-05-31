@@ -32,14 +32,24 @@
     font-size: 1.1em;
 }
 
+.iconBorrarAlumno{
+    color: #f8752a;
+}
+
 @media (min-width: 600px){
     .titulo{
         display: block;
         margin-left: 100px;
         margin-top: -45px;
-    }
-
+    }    
+    
     .listBotones {
         width: 300px;
     }
+}
+
+@media (max-width: 720px){
+    .botones{
+        float: none !important;
+    }    
 }

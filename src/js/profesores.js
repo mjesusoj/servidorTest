@@ -5,7 +5,6 @@ const edicionProfesor = require('./edicionProfesor');
 const nuevoProfesor = require('./nuevoProfesor');
 const router = express.Router();
 let tipoProfesor = 1;
-let idProfesores = [];
 let nombreProfesores = [];
 let apellidosProfesores = [];
 let correoProfesores = [];
@@ -32,7 +31,6 @@ router.get('/', (request, response) => {
 async function infProfesores() {
     datosProfesores = await modelo.mostrarUsuarios(tipoProfesor);
     datosProfesores.forEach(function (item, i) {
-        idProfesores.push(item._id);
         nombreProfesores.push(item.nombre);
         apellidosProfesores.push(item.apellidos);
         correoProfesores.push(item.correo);
@@ -44,8 +42,6 @@ function cargarPagina(response) {
     response.render('./partials/profesores.html', {
         usuarioPerfil: 'administrador',
         correoPerfil: 'administrador@admin.com',
-
-        idProfesores: idProfesores,
         nombreProfesores: nombreProfesores,
         apellidosProfesores: apellidosProfesores,
         correoProfesores: correoProfesores,
@@ -55,7 +51,6 @@ function cargarPagina(response) {
 }
 
 function vaciarArrays() {
-    idProfesores = [];
     nombreProfesores = [];
     apellidosProfesores = [];
     correoProfesores = [];

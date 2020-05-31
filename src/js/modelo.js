@@ -1,5 +1,4 @@
 const MongoClient = require('mongodb').MongoClient;
-const objectId = require('mongodb').ObjectID;
 const urlMongo = "mongodb://localhost:27017/";
 const md5 = require('blueimp-md5');
 const paginaError = require('./error');
@@ -10,6 +9,7 @@ let datosAsignaturas = '';
 let datosTemas = '';
 let resultadoCurso = '';
 let arrayNombreCurso = [];
+let palabraRemplazada = '';
 
 async function tipoUsuarioMongo(usuario, password, response) {
     const client = await MongoClient.connect(urlMongo, {
@@ -112,7 +112,7 @@ async function infUsuarios(numero) {
     }
 }
 
-async function editarProfesores(idProfesor, nombreProfesor, apellidosProfesor, correoProfesor, asignaturasProfesor) {
+async function editarProfesores(nombreProfesor, apellidosProfesor, correoProfesor, asignaturasProfesor) {
     const client = await MongoClient.connect(urlMongo, {
             useUnifiedTopology: true
         })
@@ -124,20 +124,22 @@ async function editarProfesores(idProfesor, nombreProfesor, apellidosProfesor, c
         return;
     }
 
+    remplazarEspacio(nombreProfesor);
+
     try {
         const db = client.db("administraciontest");
         let collection = db.collection('usuarios');
         let query = {
-            '_id': objectId(idProfesor)
+            'nombre': palabraRemplazada
         };
         let newValues = {
             $set: {
-                'nombre': nombreProfesor,
+                'nombre': palabraRemplazada,
                 'apellidos': apellidosProfesor,
                 'correo': correoProfesor
             }
         };
-        let result = await collection.updateOne(query, newValues);
+        await collection.updateOne(query, newValues);
     } catch (error) {
         console.log(error);
     } finally {
@@ -161,7 +163,7 @@ async function editarAlumnos(idAlumno, nombreAlumno, apellidosAlumno, correoAlum
         const db = client.db("administraciontest");
         let collection = db.collection('usuarios');
         let query = {
-            '_id': objectId(idAlumno)
+            'nombre': nombreAlumno
         };
         let newValues = {
             $set: {
@@ -170,7 +172,7 @@ async function editarAlumnos(idAlumno, nombreAlumno, apellidosAlumno, correoAlum
                 'correo': correoAlumno
             }
         };
-        let result = await collection.updateOne(query, newValues);
+        await collection.updateOne(query, newValues);
     } catch (error) {
         console.log(error);
     } finally {
@@ -190,13 +192,15 @@ async function newProfesor(newUsuarioP, newNombreP, newApellidosP, newPasswordP,
         return;
     }
 
+    remplazarEspacio(newNombreP);
+
     try {
         const db = client.db("administraciontest");
         let collection = db.collection('usuarios');
         let query = {
             'tipo': 1,
             'usuario': newUsuarioP,
-            'nombre': newNombreP,
+            'nombre': palabraRemplazada,
             'apellidos': newApellidosP,
             'password': newPasswordP,
             'correo': newCorreoP,
@@ -204,7 +208,7 @@ async function newProfesor(newUsuarioP, newNombreP, newApellidosP, newPasswordP,
                 newAsignaturasP
             ]
         };
-        let result = await collection.insertOne(query);
+        await collection.insertOne(query);
     } catch (error) {
         console.log(error);
     } finally {
@@ -224,13 +228,15 @@ async function newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, n
         return;
     }
 
+    remplazarEspacio(newNombreA);
+
     try {
         const db = client.db("administraciontest");
         let collection = db.collection('usuarios');
         let query = {
             'tipo': 2,
             'usuario': newUsuarioA,
-            'nombre': newNombreA,
+            'nombre': palabraRemplazada,
             'apellidos': newApellidosA,
             'password': newPasswordA,
             'correo': newCorreoA,
@@ -238,7 +244,7 @@ async function newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, n
                 newAsignaturasA
             ]
         };
-        let result = await collection.insertOne(query);
+        await collection.insertOne(query);
     } catch (error) {
         console.log(error);
     } finally {
@@ -258,20 +264,18 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
         return;
     }
 
-    let re0 = / /gi;
-    let newNC = editNombreCurso.replace(re0, '-');
+    remplazarEspacio(editNombreCurso);
 
     try {
         let repetido = false;
 
         arrayNombreCurso.forEach(function (item, i) {
-            if (arrayNombreCurso[i] == newNC) {
+            if (arrayNombreCurso[i] == palabraRemplazada) {
                 repetido = true;
             }
         })
 
         if (repetido == false) {
-
             const db = client.db("administraciontest");
             let collection = db.collection('cursos');
             let query = {
@@ -282,7 +286,7 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
             if (imgCurso != '') {
                 newValues = {
                     $set: {
-                        'nombre': newNC,
+                        'nombre': palabraRemplazada,
                         'descripcion': descripcionCurso,
                         'img': imgCurso
                     }
@@ -290,7 +294,7 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
             } else {
                 newValues = {
                     $set: {
-                        'nombre': newNC,
+                        'nombre': palabraRemplazada,
                         'descripcion': descripcionCurso
                     }
                 };
@@ -307,7 +311,7 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
         let repetido = false;
 
         arrayNombreCurso.forEach(function (item, i) {
-            if (arrayNombreCurso[i] == newNC) {
+            if (arrayNombreCurso[i] == palabraRemplazada) {
                 repetido = true;
             }
         })
@@ -323,7 +327,7 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
 
             newValues = {
                 $set: {
-                    'curso': newNC,
+                    'curso': palabraRemplazada,
                 }
             };
             await collection.updateMany(query, newValues);
@@ -349,14 +353,13 @@ async function newCurso(newNombreCurso, newDescripcionCurso, newImgCurso) {
         return;
     }
 
-    let re = / /gi;
-    let newNC = newNombreCurso.replace(re, '-');
+    remplazarEspacio(newNombreCurso);
 
     try {
         let repetido = false;
 
         arrayNombreCurso.forEach(function (item, i) {
-            if (arrayNombreCurso[i] == newNC) {
+            if (arrayNombreCurso[i] == palabraRemplazada) {
                 repetido = true;
             }
         })
@@ -365,7 +368,7 @@ async function newCurso(newNombreCurso, newDescripcionCurso, newImgCurso) {
             const db = client.db("administraciontest");
             let collection = db.collection('cursos');
             let query = {
-                'nombre': newNC,
+                'nombre': palabraRemplazada,
                 'descripcion': newDescripcionCurso,
                 'img': newImgCurso
             }
@@ -465,8 +468,7 @@ async function editarAsignatura(nombreCurso, nombreAsignatura, editNombreA) {
         return;
     }
 
-    let re = / /gi;
-    let newNA = editNombreA.replace(re, '-');
+    remplazarEspacio(editNombreA);
 
     try {
         const db = client.db("administraciontest");
@@ -477,7 +479,7 @@ async function editarAsignatura(nombreCurso, nombreAsignatura, editNombreA) {
         let newValues = {
             $set: {
                 'asignaturas': {
-                    $in: [newNA]
+                    $in: [palabraRemplazada]
                 }
             }
         }
@@ -495,7 +497,7 @@ async function editarAsignatura(nombreCurso, nombreAsignatura, editNombreA) {
         };
         let newValues = {
             $set: {
-                'nombre': newNA
+                'nombre': palabraRemplazada
             }
         }
         await collection.updateOne(query, newValues);
@@ -518,8 +520,7 @@ async function newAsignatura(nombreCurso, nombreAsignatura) {
         return;
     }
 
-    let re = / /gi;
-    let newNC = nombreAsignatura.replace(re, '-');
+    remplazarEspacio(nombreAsignatura);
 
     // Le insertamos una nueva asignatura al curso
     try {
@@ -530,7 +531,7 @@ async function newAsignatura(nombreCurso, nombreAsignatura) {
         };
         let newAsignatura = {
             $push: {
-                'asignaturas': newNC
+                'asignaturas': palabraRemplazada
             }
         }
 
@@ -544,7 +545,7 @@ async function newAsignatura(nombreCurso, nombreAsignatura) {
         const db = client.db("administraciontest");
         let collection = db.collection('asignaturas');
         let query = {
-            'nombre': newNC,
+            'nombre': palabraRemplazada,
             'curso': nombreCurso,
         };
 
@@ -568,8 +569,7 @@ async function borrarAsignatura(nombreCurso, nombreAsignatura) {
         return;
     }
 
-    let re = / /gi;
-    let newNA = nombreAsignatura.replace(re, '-');
+    remplazarEspacio(nombreAsignatura);
 
     try {
         const db = client.db("administraciontest");
@@ -580,7 +580,7 @@ async function borrarAsignatura(nombreCurso, nombreAsignatura) {
         let newAsignatura = {
             $pull: {
                 'asignaturas': {
-                    $in: [newNA]
+                    $in: [palabraRemplazada]
                 }
             }
         }
@@ -595,7 +595,7 @@ async function borrarAsignatura(nombreCurso, nombreAsignatura) {
         const db = client.db("administraciontest");
         let collection = db.collection('asignaturas');
         let query = {
-            'nombre': newNA,
+            'nombre': palabraRemplazada,
             'curso': nombreCurso
         };
 
@@ -653,8 +653,7 @@ async function editarTema(nombreCurso, nombreTema, editNombreT) {
         return;
     }
 
-    let re = / /gi;
-    let newNA = editNombreT.replace(re, '-');
+    remplazarEspacio(editNombreT);
 
     try {
         const db = client.db("administraciontest");
@@ -665,7 +664,7 @@ async function editarTema(nombreCurso, nombreTema, editNombreT) {
         let newValues = {
             $set: {
                 'asignaturas': {
-                    $in: [newNA]
+                    $in: [palabraRemplazada]
                 }
             }
         }
@@ -683,7 +682,7 @@ async function editarTema(nombreCurso, nombreTema, editNombreT) {
         };
         let newValues = {
             $set: {
-                'nombre': newNA
+                'nombre': palabraRemplazada
             }
         }
         await collection.updateOne(query, newValues);
@@ -706,8 +705,7 @@ async function newTema(nombreCurso, nombreAsignatura, nombreTema) {
         return;
     }
 
-    let re = / /gi;
-    let newNT = nombreTema.replace(re, '-');
+    remplazarEspacio(nombreTema);
 
     // Le insertamos una nueva asignatura al curso
     try {
@@ -719,7 +717,7 @@ async function newTema(nombreCurso, nombreAsignatura, nombreTema) {
         };
         let newTema = {
             $push: {
-                'temas': newNT
+                'temas': palabraRemplazada
             }
         }
 
@@ -733,7 +731,7 @@ async function newTema(nombreCurso, nombreAsignatura, nombreTema) {
         const db = client.db("administraciontest");
         let collection = db.collection('temas');
         let query = {
-            'nombre': newNT,
+            'nombre': palabraRemplazada,
             'asignatura': nombreAsignatura
         };
 
@@ -757,8 +755,7 @@ async function borrarTema(nombreCurso, temaSeleccionado) {
         return;
     }
 
-    let re = / /gi;
-    let newNA = temaSeleccionado.replace(re, '-');
+    remplazarEspacio(temaSeleccionado);
 
     try {
         const db = client.db("administraciontest");
@@ -770,7 +767,7 @@ async function borrarTema(nombreCurso, temaSeleccionado) {
         let newAsignatura = {
             $pull: {
                 'asignaturas': {
-                    $in: [newNA]
+                    $in: [palabraRemplazada]
                 }
             }
         }
@@ -785,7 +782,7 @@ async function borrarTema(nombreCurso, temaSeleccionado) {
         const db = client.db("administraciontest");
         let collection = db.collection('asignaturas');
         let query = {
-            'nombre': newNA,
+            'nombre': palabraRemplazada,
             'curso': nombreCurso
         };
 
@@ -815,6 +812,16 @@ async function mostrarAsignaturas(nombreCurso) {
 async function mostrarTemas(nombreCurso, nombreAsignatura) {
     await infTemas(nombreCurso, nombreAsignatura);
     return datosTemas;
+}
+
+/*
+    Función para remplazar el espacio por guiones,
+    para el funcionamiento correcto de la aplicación
+*/
+function remplazarEspacio(palabra){
+    let re = / /gi;
+    palabraRemplazada = palabra.replace(re, '-');
+    console.log("Palabra Remplazada " + palabraRemplazada);
 }
 
 function cursoRepetido() {

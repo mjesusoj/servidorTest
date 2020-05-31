@@ -3,16 +3,24 @@
 
 <head>
     <%- include('./head.html'); -%>
-    <link rel="stylesheet" type="text/css" href="../../../css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/profesores.css">
 </head>
 
 <body>
     <div class="container-fluid">
         <%- include('./navbar.html'); -%>
-        <div class="row">
-            <div class="col-12 col-md-2 mt-4">
+        <div class="row float-left botones">
+            <div class="col-12 col-sm-9 col-md-8 mt-4">
                 <%- include('./buttons.html'); -%>
+                <button class="btn btn-success mt-3 nuevoProfe" data-toggle="modal" data-target="#nuevo-profesor">
+                    <i class="fas fa-plus"></i> Nuevo Profesor
+                </button>
+                <button class="btn btn-success mt-3 borrarProfe" data-toggle="modal" data-target="#borrar-profesor">
+                    <i class="fas fa-trash-alt iconBorrarProfe"></i> Borrar
+                </button>
             </div>
+        </div>
+        <div class="row">
             <div class="col-12 col-md-5 mt-4">
                 <div class="table-responsive-md">
                     <table class="table">
@@ -34,19 +42,12 @@
                                 <td><%= asignaturasProfesores[i] %></td>
                                 <td>
                                     <button type="button" class="btn btn-success editarProfe" data-toggle="modal"
-                                        data-target="#edicion-profesores" id=<%= idProfesores[i] %>>
+                                        data-target="#edicion-profesores" id=<%= nombreProfesores[i] %>>
                                         <i class="fas fa-edit"></i>
                                     </button>
                                 </td>
                             </tr>
                             <% } %>
-                            <tr>
-                                <td colspan="5">
-                                    <button type="button" class="btn btn-success nuevoProfe" data-toggle="modal"
-                                        data-target="#nuevo-profesor"><i class="fas fa-plus"></i> Nuevo
-                                        Profesor</button>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>

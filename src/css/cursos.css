@@ -41,6 +41,10 @@
         display: block;
         margin-left: 100px;
         margin-top: -45px;
+    }    
+    
+    .listBotones {
+        width: 300px;
     }
 }
 
@@ -49,12 +53,6 @@
     .botones{
         float: none !important;
     }    
-}
-
-@media (min-width: 576px){
-    .listBotones {
-        width: 300px;
-    }
 }
 
 @media (min-width: 992px){

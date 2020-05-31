@@ -6,7 +6,6 @@ const nuevoAlumno = require('./nuevoAlumno');
 const router = express.Router();
 let tipoAlumno = 2;
 let datosAlumnos = [];
-let idAlumnos = [];
 let nombreAlumnos = [];
 let apellidosAlumnos = [];
 let correoAlumnos = [];
@@ -33,7 +32,6 @@ router.get('/', (request, response) => {
 async function infAlumnos() {
     datosAlumnos = await modelo.mostrarUsuarios(tipoAlumno);
     datosAlumnos.forEach(function (item, i) {
-        idAlumnos.push(item._id);
         nombreAlumnos.push(item.nombre);
         apellidosAlumnos.push(item.apellidos);
         correoAlumnos.push(item.correo);
@@ -45,7 +43,6 @@ function cargarPagina(response) {
     response.render('./partials/alumnos.html', {
         usuarioPerfil: 'administrador',
         correoPerfil: 'administrador@admin.com',
-        idAlumnos: idAlumnos,
         nombreAlumnos: nombreAlumnos,
         apellidosAlumnos: apellidosAlumnos,
         correoAlumnos: correoAlumnos,
@@ -56,7 +53,6 @@ function cargarPagina(response) {
 }
 
 function vaciarArrays() {
-    idAlumnos = [];
     nombreAlumnos = [];
     apellidosAlumnos = [];
     correoAlumnos = [];

@@ -32,6 +32,10 @@
     font-size: 1.1em;
 }
 
+.iconBorrarProfe{
+    color: #f8752a;
+}
+
 @media (min-width: 600px){
     .titulo{
         display: block;
@@ -43,3 +47,16 @@
         width: 300px;
     }
 }
+
+@media (max-width: 933px){
+    .botones{
+        float: none !important;
+    }    
+}
+
+/* @media (min-width: 992px){
+    .imagenCurso{
+        max-width: 400px;
+        max-height: 200px;
+    }
+} */
