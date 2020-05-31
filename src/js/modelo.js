@@ -8,6 +8,8 @@ let datosCursos = '';
 let datosUsuarios = '';
 let datosAsignaturas = '';
 let datosTemas = '';
+let resultadoCurso = '';
+let arrayNombreCurso = [];
 
 async function tipoUsuarioMongo(usuario, password, response) {
     const client = await MongoClient.connect(urlMongo, {
@@ -67,6 +69,11 @@ async function infCursos() {
         let collection = db.collection('cursos');
         let result = await collection.find().toArray();
         datosCursos = result;
+
+        arrayNombreCurso = [];
+        datosCursos.forEach(function (item, i) {
+            arrayNombreCurso.push(item.nombre);
+        })
     } catch (error) {
         console.log(error);
     } finally {
@@ -255,31 +262,74 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
     let newNC = editNombreCurso.replace(re0, '-');
 
     try {
-        const db = client.db("administraciontest");
-        let collection = db.collection('cursos');
-        let query = {
-            'nombre': nombreCurso
-        };
-        let newValues = '';
+        let repetido = false;
 
-        if (imgCurso != '') {
-            newValues = {
-                $set: {
-                    'nombre': newNC,
-                    'descripcion': descripcionCurso,
-                    'img': imgCurso
-                }
+        arrayNombreCurso.forEach(function (item, i) {
+            if (arrayNombreCurso[i] == newNC) {
+                repetido = true;
+            }
+        })
+
+        if (repetido == false) {
+
+            const db = client.db("administraciontest");
+            let collection = db.collection('cursos');
+            let query = {
+                'nombre': nombreCurso
             };
+            let newValues = '';
+
+            if (imgCurso != '') {
+                newValues = {
+                    $set: {
+                        'nombre': newNC,
+                        'descripcion': descripcionCurso,
+                        'img': imgCurso
+                    }
+                };
+            } else {
+                newValues = {
+                    $set: {
+                        'nombre': newNC,
+                        'descripcion': descripcionCurso
+                    }
+                };
+            }
+            await collection.updateOne(query, newValues);
         } else {
+            console.log('Repetido');
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        let repetido = false;
+
+        arrayNombreCurso.forEach(function (item, i) {
+            if (arrayNombreCurso[i] == newNC) {
+                repetido = true;
+            }
+        })
+
+        if (repetido == false) {
+
+            const db = client.db("administraciontest");
+            let collection = db.collection('asignaturas');
+            let query = {
+                'curso': nombreCurso
+            };
+            let newValues = '';
+
             newValues = {
                 $set: {
-                    'nombre': newNC,
-                    'descripcion': descripcionCurso
+                    'curso': newNC,
                 }
             };
+            await collection.updateMany(query, newValues);
+        } else {
+            console.log('Repe');
         }
-
-        let result = await collection.updateOne(query, newValues);
     } catch (error) {
         console.log(error);
     } finally {
@@ -301,17 +351,29 @@ async function newCurso(newNombreCurso, newDescripcionCurso, newImgCurso) {
 
     let re = / /gi;
     let newNC = newNombreCurso.replace(re, '-');
-    console.log(newNC);
 
     try {
-        const db = client.db("administraciontest");
-        let collection = db.collection('cursos');
-        let query = {
-            'nombre': newNC,
-            'descripcion': newDescripcionCurso,
-            'img': newImgCurso
+        let repetido = false;
+
+        arrayNombreCurso.forEach(function (item, i) {
+            if (arrayNombreCurso[i] == newNC) {
+                repetido = true;
+            }
+        })
+
+        if (repetido == false) {
+            const db = client.db("administraciontest");
+            let collection = db.collection('cursos');
+            let query = {
+                'nombre': newNC,
+                'descripcion': newDescripcionCurso,
+                'img': newImgCurso
+            }
+            await collection.insertOne(query);
+        } else {
+            resultadoCurso = 'El nombre del curso está repetido';
+            cursoRepetido(resultadoCurso);
         }
-        let result = await collection.insertOne(query);
     } catch (error) {
         console.log(error);
     } finally {
@@ -331,13 +393,26 @@ async function borrarCurso(cursoSeleccionado) {
         return;
     }
 
+    // Borrar curso
     try {
         const db = client.db("administraciontest");
         let collection = db.collection('cursos');
         let query = {
             'nombre': cursoSeleccionado
         };
-        let result = await collection.deleteOne(query);
+        await collection.deleteOne(query);
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Borrar asignaturas
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('asignaturas');
+        let query = {
+            'curso': cursoSeleccionado
+        };
+        await collection.deleteMany(query);
     } catch (error) {
         console.log(error);
     } finally {
@@ -390,19 +465,40 @@ async function editarAsignatura(nombreCurso, nombreAsignatura, editNombreA) {
         return;
     }
 
+    let re = / /gi;
+    let newNA = editNombreA.replace(re, '-');
+
     try {
         const db = client.db("administraciontest");
         let collection = db.collection('cursos');
         let query = {
-            'nombre': nombreCurso,
-            'asignaturas.nombre': nombreAsignatura
+            'nombre': nombreCurso
         };
         let newValues = {
-            $set:{
-                'asignaturas.$.nombre': editNombreA
+            $set: {
+                'asignaturas': {
+                    $in: [newNA]
+                }
             }
         }
-        let result = await collection.updateOne(query, newValues);
+        await collection.updateOne(query, newValues);
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('asignaturas');
+        let query = {
+            'nombre': nombreAsignatura,
+            'curso': nombreCurso
+        };
+        let newValues = {
+            $set: {
+                'nombre': newNA
+            }
+        }
+        await collection.updateOne(query, newValues);
     } catch (error) {
         console.log(error);
     } finally {
@@ -410,7 +506,7 @@ async function editarAsignatura(nombreCurso, nombreAsignatura, editNombreA) {
     }
 }
 
-async function newAsignatura(nombreCurso, nombre) {
+async function newAsignatura(nombreCurso, nombreAsignatura) {
     const client = await MongoClient.connect(urlMongo, {
             useUnifiedTopology: true
         })
@@ -422,18 +518,37 @@ async function newAsignatura(nombreCurso, nombre) {
         return;
     }
 
+    let re = / /gi;
+    let newNC = nombreAsignatura.replace(re, '-');
+
+    // Le insertamos una nueva asignatura al curso
     try {
         const db = client.db("administraciontest");
         let collection = db.collection('cursos');
         let query = {
-            'nombre': nombreCurso,
+            'nombre': nombreCurso
         };
         let newAsignatura = {
-            $push:{
-                'asignaturas': [nombre]
+            $push: {
+                'asignaturas': newNC
             }
         }
-        let result = await collection.updateOne(query, newAsignatura);
+
+        await collection.updateOne(query, newAsignatura);
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Insertamos en la colección asignaturas una nueva, identificado con el curso
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('asignaturas');
+        let query = {
+            'nombre': newNC,
+            'curso': nombreCurso,
+        };
+
+        await collection.insertOne(query);
     } catch (error) {
         console.log(error);
     } finally {
@@ -441,7 +556,58 @@ async function newAsignatura(nombreCurso, nombre) {
     }
 }
 
-async function infTemas(nombreAsignatura) {
+async function borrarAsignatura(nombreCurso, nombreAsignatura) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    let re = / /gi;
+    let newNA = nombreAsignatura.replace(re, '-');
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('cursos');
+        let query = {
+            'nombre': nombreCurso
+        };
+        let newAsignatura = {
+            $pull: {
+                'asignaturas': {
+                    $in: [newNA]
+                }
+            }
+        }
+
+        await collection.updateOne(query, newAsignatura);
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Insertamos en la colección asignaturas una nueva, identificado con el curso
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('asignaturas');
+        let query = {
+            'nombre': newNA,
+            'curso': nombreCurso
+        };
+
+        await collection.deleteOne(query);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function infTemas(nombreCurso, nombreAsignatura) {
     const client = await MongoClient.connect(urlMongo, {
             useUnifiedTopology: true
         })
@@ -455,12 +621,175 @@ async function infTemas(nombreAsignatura) {
 
     try {
         const db = client.db("administraciontest");
+        let collection = db.collection('asignaturas');
+        let query = {
+            'nombre': nombreAsignatura,
+            'curso': nombreCurso,
+        };
+        let tema = {
+            projection: {
+                'temas': 1,
+                '_id': 0
+            }
+        }
+        let result = await collection.find(query, tema).toArray();
+        datosTemas = result;
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function editarTema(nombreCurso, nombreTema, editNombreT) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    let re = / /gi;
+    let newNA = editNombreT.replace(re, '-');
+
+    try {
+        const db = client.db("administraciontest");
         let collection = db.collection('cursos');
         let query = {
-            'asignaturas.nombre': nombreAsignatura
+            'nombre': nombreCurso
         };
-        let result = await collection.find(query).toArray();
-        datosTemas = result;
+        let newValues = {
+            $set: {
+                'asignaturas': {
+                    $in: [newNA]
+                }
+            }
+        }
+        await collection.updateOne(query, newValues);
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('asignaturas');
+        let query = {
+            'nombre': nombreTema,
+            'curso': nombreCurso
+        };
+        let newValues = {
+            $set: {
+                'nombre': newNA
+            }
+        }
+        await collection.updateOne(query, newValues);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function newTema(nombreCurso, nombreAsignatura, nombreTema) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    let re = / /gi;
+    let newNT = nombreTema.replace(re, '-');
+
+    // Le insertamos una nueva asignatura al curso
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('asignaturas');
+        let query = {
+            'nombre': nombreAsignatura,
+            'curso': nombreCurso
+        };
+        let newTema = {
+            $push: {
+                'temas': newNT
+            }
+        }
+
+        await collection.updateOne(query, newTema);
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Le insertamos una nueva asignatura al curso
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('temas');
+        let query = {
+            'nombre': newNT,
+            'asignatura': nombreAsignatura
+        };
+
+        await collection.insertOne(query);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function borrarTema(nombreCurso, temaSeleccionado) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    let re = / /gi;
+    let newNA = temaSeleccionado.replace(re, '-');
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('cursos');
+        let query = {
+            'nombre': temaSeleccionado,
+            'curso': nombreCurso
+        };
+        let newAsignatura = {
+            $pull: {
+                'asignaturas': {
+                    $in: [newNA]
+                }
+            }
+        }
+
+        await collection.updateOne(query, newAsignatura);
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Insertamos en la colección asignaturas una nueva, identificado con el curso
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('asignaturas');
+        let query = {
+            'nombre': newNA,
+            'curso': nombreCurso
+        };
+
+        await collection.deleteOne(query);
     } catch (error) {
         console.log(error);
     } finally {
@@ -483,10 +812,14 @@ async function mostrarAsignaturas(nombreCurso) {
     return datosAsignaturas;
 }
 
-async function mostrarTemas(nombreAsignatura) {
-    await infTemas(nombreAsignatura);
+async function mostrarTemas(nombreCurso, nombreAsignatura) {
+    await infTemas(nombreCurso, nombreAsignatura);
     return datosTemas;
 }
+
+function cursoRepetido() {
+    return resultadoCurso;
+};
 
 module.exports = {
     "tipoUsuarioMongo": tipoUsuarioMongo,
@@ -502,5 +835,8 @@ module.exports = {
     "mostrarAsignaturas": mostrarAsignaturas,
     "editarAsignatura": editarAsignatura,
     "newAsignatura": newAsignatura,
-    "mostrarTemas": mostrarTemas
+    "borrarAsignatura": borrarAsignatura,
+    "mostrarTemas": mostrarTemas,
+    "newTema": newTema,
+    "cursoRepetido": cursoRepetido
 }

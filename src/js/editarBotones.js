@@ -3,8 +3,6 @@ $(document).ready(function(){
     let btnProfesores = $('.btnProfesores');
     let btnAlumnos = $('.btnAlumnos');
     let editarCurso = $('.editarCurso');
-    let borrarCurso = $('.borrarCurso');
-    let volverCurso = $('.volverCurso');
 
     btnCursos.click(function(){
         btnCursos.addClass('active');

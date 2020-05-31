@@ -11,21 +11,19 @@
     <div class="container-fluid">
         <%- include('./navbar.html'); -%>
         <div class="row float-left botones">
-            <div class="col-12 col-md-6 mt-4">
+            <div class="col-12 col-sm-9 col-md-8 mt-4">
                 <%- include('./buttons.html'); -%>
-                <button class="btn btn-success mt-4 nuevoCurso" data-toggle="modal" data-target="#list-nuevo">
-                    <i class="fas fa-plus" aria-hidden="true"></i> Nuevo Curso
+                <button class="btn btn-success mt-3 nuevoCurso" data-toggle="modal" data-target="#list-nuevo">
+                    <i class="fas fa-plus"></i> Nuevo Curso
                 </button>
-            </div>
-            <div class="col-12">
-                <button class="btn btn-success mt-2 borrarCurso" data-toggle="modal" data-target="#list-cursos-delete">
+                <button class="btn btn-success mt-3 borrarCurso" data-toggle="modal" data-target="#list-cursos-delete">
                     <i class="fas fa-trash-alt iconBorrarCurso"></i> Borrar
                 </button>
             </div>
         </div>
         <div class="row">
             <% for(let i=0;i<nombreCursos.length;i++){ %>
-            <div class="col-12 col-sm-5 col-md-4 col-lg-3 col-xl-2 mt-4">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mt-4">
                 <div class="card">
                     <form action="/administrador/cursos/curso" class="formularioCursos" method="GET">
                         <input type="hidden" name="nombre" value=<%= nombreCursos[i] %>>
@@ -86,8 +84,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Guardar
-                            cambios</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Guardar cambios</button>
                     </div>
                 </form>
             </div>
@@ -121,8 +118,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Imagen <i class="fas fa-link"></i></label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control newImgCurso" name="newImagenC"
-                                    placeholder="inserte link">
+                                <input type="text" class="form-control newImgCurso" name="newImagenC" placeholder="inserte link">
                             </div>
                         </div>
                     </div>
@@ -151,7 +147,7 @@
                             <label for="exampleFormControlSelect2">Seleccione curso a borrar</label>
                             <select class="form-control" name="selectCursos">
                                 <% for(let i=0;i<nombreCursos.length;i++){ %>
-                                    <option><%= nombreCursos[i] %></option>
+                                    <option value=<%= nombreCursos[i] %>><%= nombreCursos[i] %></option>
                                 <% } %>
                             </select>
                         </div>

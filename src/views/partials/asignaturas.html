@@ -3,19 +3,27 @@
 
 <head>
     <%- include('./head.html'); -%>
-    <link rel="stylesheet" type="text/css" href="../../../css/admin.css">
+    <title>Administración - Asignaturas</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/asignaturas.css">
 </head>
 
 <body>
     <div class="container-fluid">
         <%- include('./navbar.html'); -%>
-
-        <div class="row">
-            <div class="col-12 col-md-2 mt-4">
+        <div class="row float-left botones">
+            <div class="col-12 col-sm-9 col-md-8 mt-4">
                 <%- include('./buttons.html'); -%>
+                <button class="btn btn-success mt-3 nuevo" data-toggle="modal" data-target="#nuevo">
+                    <i class="fas fa-plus"></i> <%= tituloNew %>
+                </button>
+                <button class="btn btn-success mt-3 borrar" data-toggle="modal" data-target="#list-delete">
+                    <i class="fas fa-trash-alt iconBorrar"></i> Borrar
+                </button>
             </div>
+        </div>
+        <div class="row">
             <div class="col-12 col-md-5 mt-4">
-                <h2 class="text-success"><%= nombreCurso %></h2>
+                <h2 class="text-success"><%= nombre1 %></h2>
                 <div class="table-responsive-md">
                     <table class="table">
                         <thead class="thead-dark">
@@ -26,29 +34,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% for(let i=0;i<nombreAsignaturas.length;i++){ %>
+                            <% for(let i=0;i<nombre2.length;i++){ %>
                             <tr>
-                                <td><%= nombreAsignaturas[i] %></td>
+                                <td><%= nombre2[i] %></td>
                                 <td>
-                                    <button type="button" class="btn btn-success editarAsignatura" data-toggle="modal"
-                                        data-target="#edicion-asignaturas" id=<%= nombreAsignaturas[i] %>>
+                                    <button type="button" class="btn btn-success editar2" data-toggle="modal"
+                                        data-target="#edicion" id=<%= nombre2[i] %>>
                                         <i class="fas fa-edit"></i>
                                     </button>
                                 </td>
                                 <td>
                                     <form action="/administrador/cursos/curso/asignatura" method="GET">
-                                        <input type="hidden" name="nombre" value=<%= nombreAsignaturas[i] %>>
-                                        <button class="btn btn-primary" type="submit"><i class="fas fa-sign-in-alt"></i></button>
+                                        <input type="hidden" name="nombre" value=<%= nombre2[i] %>>
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="fas fa-sign-in-alt"></i>
+                                        </button>
                                     </form>
                                 </td>
                             </tr>
                             <% } %>
-                            <tr>       
-                                <td colspan="3">                
-                                    <p><%= mensajedbVacio %></p>                    
-                                    <button type="button" class="btn btn-success nuevaAsignatura" data-toggle="modal"
-                                    data-target="#nueva-asignatura"><i class="fas fa-plus"></i> Nueva
-                                    Asignatura</button>
+                            <tr>
+                                <td colspan="3">
+                                    <p><%= mensajedbVacio %></p>
                                 </td>
                             </tr>
                         </tbody>
@@ -60,56 +67,91 @@
     <!-- Perfil Usuario -->
     <%- include('./perfilUsuario.html'); -%>
 
-    <!-- Edición Asignaturas -->
-    <div class="modal fade" id="edicion-asignaturas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Edición -->
+    <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edición de Asignaturas:</h5>
+                    <h5 class="modal-title"><%= tituloEdicion %></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action='/administrador/cursos/curso/asignatura/edicion' name="formAsignaturas" method="GET">
-                    <input type="hidden" id="nombreAsignatura" name="nombreAsignatura">
+                <form method="GET" action=<%= direccionJSEdicion %>>
+                    <input type="hidden" id="nombre2" name="nombre2">
                     <div class="modal-body">
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Nombre</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control nombreAsignatura" name="editNombreA" required>
+                                <input type="text" class="form-control nombre2" name="editNombre" required>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Editar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Guardar cambios</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <!-- Nuevo Asignatura -->
-    <div class="modal fade" id="nueva-asignatura" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Nuevo -->
+    <div class="modal fade" id="nuevo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Nueva Asignatura:</h5>
+                    <h5 class="modal-title"><%= tituloNew %></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action='/administrador/cursos/curso/asignatura/nueva' method="GET">
+                <form method="GET" action=<%= direccionJSNueva %>>
                     <div class="modal-body">
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Nombre</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="newNombreA" required>
+                                <input type="text" class="form-control" name="newNombre" required>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Añadir</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Añadir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Borrar -->
+    <div class="modal fade" id="list-delete" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><%= tituloBorrar %></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="GET" action=<%= direccionJSBorrar %>>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="seleccionBorrar">Seleccione para borrar</label>
+                            <select class="form-control" name="selectAsignaturas">
+                                <% for(let i=0;i<nombre2.length;i++){ %>
+                                <option value=<%= nombre2[i] %>><%= nombre2[i] %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success borrar">
+                            <i class="fas fa-trash-alt iconBorrar"></i> Borrar
+                        </button>
+                        <button type="button" class="btn btn-primary volver" data-dismiss="modal">
+                            <i class="fas fa-undo"></i> Volver
+                        </button>
                     </div>
                 </form>
             </div>

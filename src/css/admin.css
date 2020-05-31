@@ -25,6 +25,10 @@
         margin-left: 100px;
         margin-top: -45px;
     }
+
+    .listBotones {
+        width: 300px;
+    }
 }
 
 .imagenCurso{

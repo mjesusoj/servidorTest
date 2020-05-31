@@ -1,7 +1,7 @@
 let profesorSeleccionado = '';
 let alumnoSeleccionado = '';
 let cursoSeleccionado = '';
-let asignaturaSeleccionada = '';
+let nombre2Seleccionado = '';
 let temaSeleccionado = '';
 
 $(document).ready(function () {
@@ -61,27 +61,31 @@ $(document).ready(function () {
         $('.descripcionCurso').val(datosCurso[1]);
     });
 
-    $('.editarAsignatura').click(function () {
-        $('#nombreAsignatura').val(this.id);
-        asignaturaSeleccionada = '#' + this.id;
+    $('.editar2').click(function () {
+        $('#nombre2').val(this.id);
+        nombre2Seleccionado = '#' + this.id;
         
-        let contenidoAsignatura = $(asignaturaSeleccionada).parent().parent().children()[0];
-        let nombreAsignatura = contenidoAsignatura.textContent;
+        let contenido = $(nombre2Seleccionado).parent().parent().children()[0];
+        let nombre = contenido.textContent;
 
-        $('.nombreAsignatura').val(nombreAsignatura);
+        $('.nombre2').val(nombre);
     });
 
-    $('.editarTema').click(function () {
-        $('#nombreTema').val(this.id);
-        temaSeleccionado = '#' + this.id;
-        
-        let contenidoTema = $(temaSeleccionado).parent().parent().children()[0];
-        let nombreTema = contenidoTema.textContent;
+    /*    
+        $('.editarTema').click(function () {
+            $('#nombreTema').val(this.id);
+            temaSeleccionado = '#' + this.id;
+            
+            let contenidoTema = $(temaSeleccionado).parent().parent().children()[0];
+            let nombreTema = contenidoTema.textContent;
 
-        $('.newNombreTema').val(nombreTema);
-    });
+            $('.newNombreTema').val(nombreTema);
+        }); 
+    */
 
-    $('.borrarCurso').click(function (){
-        $('.borrarCurso').parent()
-    });
+    /*     
+        $('.borrarCurso').click(function (){
+            $('.borrarCurso').parent()
+        }); 
+    */
 });

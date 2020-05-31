@@ -8,12 +8,10 @@ let descripcionCursos = [];
 let imgCursos = [];
 
 let nombreCurso = '';
-let datosAsignaturas = '';
+let datosA = '';
 let nombreAsignaturas = [];
-let asignaturas = [];
 let nombreAsignatura = '';
 let mensajedbVacio = '';
-let datosTemas = '';
 let nombreTemas = '';
 
 router.use(bodyParser.urlencoded({ extended: false }));
@@ -53,6 +51,7 @@ router.post('/nuevo', (request, response) => {
     response.redirect('/administrador/cursos');
 });
 
+// Borrar curso
 router.post('/borrar', (request, response) => {
     let cursoSeleccionado = request.body.selectCursos;
     modelo.borrarCurso(cursoSeleccionado);
@@ -84,20 +83,48 @@ router.get('/curso/asignatura', (request, response) => {
     }
 });
 
+// Nueva asignatura
+router.get('/curso/asignatura/nueva', (request, response) => {
+    let newNombreAsignatura = request.query.newNombre;
+    modelo.newAsignatura(nombreCurso, newNombreAsignatura);
+    response.redirect('/administrador/cursos/curso');
+});
+
 // Editar las asignaturas de los cursos
 router.get('/curso/asignatura/edicion', (request, response) => {
     let nombreAsignatura = request.query.nombreAsignatura;
-    let editNombreA = request.query.editNombreA;
-    
+    let editNombreA = request.query.editNombre;
     modelo.editarAsignatura(nombreCurso, nombreAsignatura, editNombreA);
     response.redirect('/administrador/cursos/curso');
 });
 
-// Nueva asignatura
-router.get('/curso/asignatura/nueva', (request, response) => {
-    let newNombreAsignatura = request.query.newNombreA;
-    modelo.newAsignatura(nombreCurso, newNombreAsignatura);
+// Borrar asignatura
+router.get('/curso/asignatura/borrar', (request, response) => {
+    let asignaturaSeleccionada = request.query.selectAsignaturas;
+    modelo.borrarAsignatura(nombreCurso, asignaturaSeleccionada);
     response.redirect('/administrador/cursos/curso');
+});
+
+// Nuevo tema
+router.get('/curso/asignatura/tema/nuevo', (request, response) => {
+    let newNombreTema = request.query.newNombre;
+    modelo.newTema(nombreCurso, nombreAsignatura, newNombreTema);
+    response.redirect('/administrador/cursos/curso/asignatura');
+});
+
+// Editar los temas de las asignaturas
+router.get('/curso/asignatura/tema/edicion', (request, response) => {
+    let nombreTema = request.query.nombreTema;
+    let editNombreT = request.query.editNombreA;
+    modelo.editarTema(nombreCurso, nombreTema, editNombreT);
+    response.redirect('/administrador/cursos/curso/asignatura');
+});
+
+// Borrar tema
+router.get('/curso/asignatura/tema/borrar', (request, response) => {
+    let temaSeleccionado = request.query.selectTemas;
+    modelo.borrarTema(nombreCurso, temaSeleccionado);
+    response.redirect('/administrador/cursos/curso/asignatura');
 });
 
 async function infCursos() {
@@ -121,13 +148,15 @@ function cargarCursos(response) {
 }
 
 async function infAsignaturas() {
-    datosAsignaturas = await modelo.mostrarAsignaturas(nombreCurso);
+    datosA = await modelo.mostrarAsignaturas(nombreCurso);
+    let datosAsig = Object.values(datosA)[0];
+    let datosAsignaturas = Object.values(datosAsig)[0];
+
     // Si no hay asignaturas, que salga un mensaje
     try{
-        let object = {};
-        object = datosAsignaturas;
-        console.log(object.ObjectName.asignaturas);
-        
+        for (let i=0; i<datosAsignaturas.length; i++){
+            nombreAsignaturas.push(datosAsignaturas[i]);
+        }
     }catch{
         mensajedbVacio = 'No hay asignaturas (Pulsa en "Nueva Asignatura", para añadir una)';
     }
@@ -137,32 +166,50 @@ function cargarAsignaturas(response, nombreCurso) {
     response.render('./partials/asignaturas.html', {
         usuarioPerfil: 'administrador',
         correoPerfil: 'administrador@admin.com',
-        nombreCurso: nombreCurso,
-        nombreAsignaturas: nombreAsignaturas,
-        mensajedbVacio: mensajedbVacio
+        nombre1: nombreCurso,
+        nombre2: nombreAsignaturas,
+        mensajedbVacio: mensajedbVacio,
+        tituloEdicion: 'Edición de Asignatura',
+        tituloNew: 'Nueva Asignatura',
+        tituloBorrar: 'Borrar Asignatura',
+        direccionJSEdicion: '/administrador/cursos/curso/asignatura/edicion',
+        direccionJSNueva: '/administrador/cursos/curso/asignatura/nueva',
+        direccionJSBorrar: '/administrador/cursos/curso/asignatura/borrar'
     });
     vaciarArrays();
     mensajedbVacio = '';
 }
 
 async function infTemas() {
-    datosTemas = await modelo.mostrarTemas(nombreAsignatura);
+    let datos = await modelo.mostrarTemas(nombreCurso, nombreAsignatura);
+    let datosTem = Object.values(datos)[0];
+    let datosTemas = Object.values(datosTem)[0];
+
     try{
-        datosTemas.forEach(function (item, i) {
-            nombreTemas.push(item.asignaturas.temas.nombre);
-        });
+        for (let i=0; i<datosTemas.length; i++){
+            nombreTemas.push(datosTemas[i]);
+        }
+
+        console.log(datosTem);
+        console.log(nombreTemas);
     }catch{
-        mensajedbVacio = 'No hay temas';
+        mensajedbVacio = 'No hay asignaturas (Pulsa en "Nueva Asignatura", para añadir una)';
     }
 }
 
 function cargarTemas(response) {
-    response.render('./partials/temas.html', {
+    response.render('./partials/asignaturas.html', {
         usuarioPerfil: 'administrador',
         correoPerfil: 'administrador@admin.com',
-        nombreAsignatura: nombreAsignatura,
-        nombreTemas: nombreTemas,
-        mensajedbVacio: mensajedbVacio
+        nombre1: nombreAsignatura,
+        nombre2: nombreTemas,
+        mensajedbVacio: mensajedbVacio,
+        tituloEdicion: 'Edición de Tema',
+        tituloNew: 'Nuevo Tema',
+        tituloBorrar: 'Borrar Tema',
+        direccionJSEdicion: '/administrador/cursos/curso/asignatura/tema/edicion',
+        direccionJSNueva: '/administrador/cursos/curso/asignatura/tema/nuevo',
+        direccionJSBorrar: '/administrador/cursos/asignatura/tema/borrar'
     });
     vaciarArrays();
     mensajedbVacio = '';
