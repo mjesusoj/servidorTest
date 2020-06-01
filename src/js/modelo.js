@@ -272,13 +272,54 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
     }
 
     remplazarEspacio(editNombreCurso);
+    
+    let newValues = '';
+
+    if (nombreCurso != palabraRemplazada) {
+
+        if (imgCurso != '') {
+            newValues = {
+                $set: {
+                    'nombre': palabraRemplazada,
+                    'descripcion': descripcionCurso,
+                    'img': imgCurso
+                }
+            };
+        } else {
+            newValues = {
+                $set: {
+                    'nombre': palabraRemplazada,
+                    'descripcion': descripcionCurso
+                }
+            };
+        }
+    } else {
+
+        if (imgCurso != '') {
+            newValues = {
+                $set: {
+                    'descripcion': descripcionCurso,
+                    'img': imgCurso
+                }
+            };
+        } else {
+            newValues = {
+                $set: {
+                    'descripcion': descripcionCurso
+                }
+            };
+        }
+    }
 
     try {
+
         let repetido = false;
 
         arrayNombreCurso.forEach(function (item, i) {
             if (arrayNombreCurso[i] == palabraRemplazada) {
-                repetido = true;
+                if (nombreCurso != palabraRemplazada) {
+                    repetido = true;
+                }
             }
         })
 
@@ -288,24 +329,7 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
             let query = {
                 'nombre': nombreCurso
             };
-            let newValues = '';
-
-            if (imgCurso != '') {
-                newValues = {
-                    $set: {
-                        'nombre': palabraRemplazada,
-                        'descripcion': descripcionCurso,
-                        'img': imgCurso
-                    }
-                };
-            } else {
-                newValues = {
-                    $set: {
-                        'nombre': palabraRemplazada,
-                        'descripcion': descripcionCurso
-                    }
-                };
-            }
+            
             await collection.updateOne(query, newValues);
         } else {
             console.log('Repetido');
@@ -319,7 +343,9 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
 
         arrayNombreCurso.forEach(function (item, i) {
             if (arrayNombreCurso[i] == palabraRemplazada) {
-                repetido = true;
+                if (nombreCurso != palabraRemplazada) {
+                    repetido = true;
+                }
             }
         })
 
@@ -327,6 +353,71 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
 
             const db = client.db("administraciontest");
             let collection = db.collection('asignaturas');
+            let query = {
+                'curso': nombreCurso
+            };
+            let newValues = '';
+
+            newValues = {
+                $set: {
+                    'curso': palabraRemplazada,
+                }
+            };
+            await collection.updateMany(query, newValues);
+        } else {
+            console.log('Repe');
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        let repetido = false;
+
+        arrayNombreCurso.forEach(function (item, i) {
+            if (arrayNombreCurso[i] == palabraRemplazada) {
+                if (nombreCurso != palabraRemplazada) {
+                    repetido = true;
+                }
+            }
+        })
+
+        if (repetido == false) {
+
+            const db = client.db("administraciontest");
+            let collection = db.collection('temas');
+            let query = {
+                'curso': nombreCurso
+            };
+            let newValues = '';
+
+            newValues = {
+                $set: {
+                    'curso': palabraRemplazada,
+                }
+            };
+            await collection.updateMany(query, newValues);
+        } else {
+            console.log('Repe');
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        let repetido = false;
+
+        arrayNombreCurso.forEach(function (item, i) {
+            if (arrayNombreCurso[i] == palabraRemplazada) {
+                if (nombreCurso != palabraRemplazada) {
+                    repetido = true;
+                }
+            }
+        })
+
+        if (repetido == false) {
+            const db = client.db("administraciontest");
+            let collection = db.collection('tests');
             let query = {
                 'curso': nombreCurso
             };
