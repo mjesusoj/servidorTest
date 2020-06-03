@@ -19,14 +19,6 @@ let datosT = '';
 
 router.use(bodyParser.urlencoded({ extended: false }));
 
-router.post('/', (request, response) => {
-    cargar();
-    async function cargar() {
-        await infCursos();
-        cargarCursos(response);
-    }
-});
-
 router.get('/', (request, response) => {
     cargar();
     async function cargar(){
@@ -149,6 +141,11 @@ router.get('/curso/asignatura/tema/borrar', (request, response) => {
     let temaSeleccionado = request.query.select;
     modelo.borrarTema(nombreCurso, temaSeleccionado);
     response.redirect('/administrador/cursos/curso/asignatura');
+});
+
+// Test
+router.get('/curso/asignatura/tema/test', (request, response) => {
+    
 });
 
 // Nuevo test

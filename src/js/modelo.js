@@ -11,6 +11,7 @@ let resultadoCurso = '';
 let arrayNombreCurso = [];
 let datosTests = '';
 let palabraRemplazada = '';
+let datosTodasAsignaturas = '';
 
 async function tipoUsuarioMongo(usuario, password, response) {
     const client = await MongoClient.connect(urlMongo, {
@@ -137,7 +138,8 @@ async function editarProfesores(nombreProfesor, apellidosProfesor, correoProfeso
         const db = client.db("administraciontest");
         let collection = db.collection('usuarios');
         let query = {
-            'nombre': palabraRemplazada
+            'nombre': palabraRemplazada,
+
         };
         let newValues = {
             $set: {
@@ -151,6 +153,33 @@ async function editarProfesores(nombreProfesor, apellidosProfesor, correoProfeso
         console.log(error);
     } finally {
         client.close();
+    }
+}
+
+async function borrarProfesores(profesorSeleccionado) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    // Borrar profesor
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('usuarios');
+        let query = {
+            'nombre': profesorSeleccionado
+        };
+        await collection.deleteOne(query);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close;
     }
 }
 
@@ -187,6 +216,33 @@ async function editarAlumnos(nombreAlumno, apellidosAlumno, correoAlumno, cursoA
     }
 }
 
+async function borrarAlumnos(alumnoSeleccionado) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    // Borrar curso
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('usuarios');
+        let query = {
+            'nombre': alumnoSeleccionado
+        };
+        await collection.deleteOne(query);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close;
+    }
+}
+
 async function newProfesor(newUsuarioP, newNombreP, newApellidosP, newPasswordP, newCorreoP, newAsignaturasP) {
     const client = await MongoClient.connect(urlMongo, {
             useUnifiedTopology: true
@@ -211,11 +267,28 @@ async function newProfesor(newUsuarioP, newNombreP, newApellidosP, newPasswordP,
             'apellidos': newApellidosP,
             'password': newPasswordP,
             'correo': newCorreoP,
-            'asignaturas': [
-                newAsignaturasP
-            ]
+            'asignaturas': newAsignaturasP
         };
         await collection.insertOne(query);
+    } catch (error) {
+        console.log(error);
+    }
+
+    let asignaturaCurso = newAsignaturasP.split(' de ');
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('asignaturas');
+        let query = {
+            nombre: asignaturaCurso[0],
+            curso: asignaturaCurso[1]
+        }
+        let profesor = {
+            $push: {
+                profesores: newUsuarioP
+            }
+        }
+        await collection.updateOne(query, profesor);
     } catch (error) {
         console.log(error);
     } finally {
@@ -223,7 +296,7 @@ async function newProfesor(newUsuarioP, newNombreP, newApellidosP, newPasswordP,
     }
 }
 
-async function newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, newCorreoA, newAsignaturasA) {
+async function newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, newCorreoA, newCursoA) {
     const client = await MongoClient.connect(urlMongo, {
             useUnifiedTopology: true
         })
@@ -247,8 +320,8 @@ async function newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, n
             'apellidos': newApellidosA,
             'password': newPasswordA,
             'correo': newCorreoA,
-            'asignaturas': [
-                newAsignaturasA
+            'cursos': [
+                newCursoA
             ]
         };
         await collection.insertOne(query);
@@ -272,7 +345,7 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
     }
 
     remplazarEspacio(editNombreCurso);
-    
+
     let newValues = '';
 
     if (nombreCurso != palabraRemplazada) {
@@ -329,7 +402,7 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
             let query = {
                 'nombre': nombreCurso
             };
-            
+
             await collection.updateOne(query, newValues);
         } else {
             console.log('Repetido');
@@ -538,6 +611,29 @@ async function borrarCurso(cursoSeleccionado) {
             'curso': cursoSeleccionado
         };
         await collection.deleteMany(query);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+async function todasAsignaturas() {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('asignaturas');
+        datosTodasAsignaturas = await collection.find().toArray();
     } catch (error) {
         console.log(error);
     } finally {
@@ -1122,6 +1218,11 @@ async function mostrarAsignaturas(nombreCurso) {
     return datosAsignaturas;
 }
 
+async function mostrarTodasAsignaturas() {
+    await todasAsignaturas();
+    return datosTodasAsignaturas;
+}
+
 async function mostrarTemas(nombreCurso, nombreAsignatura) {
     await infTemas(nombreCurso, nombreAsignatura);
     return datosTemas;
@@ -1136,7 +1237,7 @@ async function mostrarTests(nombreCurso, nombreAsignatura, nombreTema) {
     Función para remplazar el espacio por guiones,
     para el funcionamiento correcto de la aplicación
 */
-function remplazarEspacio(palabra){
+function remplazarEspacio(palabra) {
     let re = / /gi;
     palabraRemplazada = palabra.replace(re, '-');
 }
@@ -1150,13 +1251,16 @@ module.exports = {
     "mostrarCursos": mostrarCursos,
     "mostrarUsuarios": mostrarUsuarios,
     "editarProfesores": editarProfesores,
+    "borrarProfesores": borrarProfesores,
     "editarAlumnos": editarAlumnos,
+    "borrarAlumnos": borrarAlumnos,
     "newProfesor": newProfesor,
     "newAlumno": newAlumno,
     "editarCurso": editarCurso,
     "newCurso": newCurso,
     "borrarCurso": borrarCurso,
     "mostrarAsignaturas": mostrarAsignaturas,
+    "mostrarTodasAsignaturas": mostrarTodasAsignaturas,
     "editarAsignatura": editarAsignatura,
     "newAsignatura": newAsignatura,
     "borrarAsignatura": borrarAsignatura,
@@ -1164,6 +1268,6 @@ module.exports = {
     "newTema": newTema,
     "borrarTema": borrarTema,
     "mostrarTests": mostrarTests,
-    "newTest": newTest, 
+    "newTest": newTest,
     "cursoRepetido": cursoRepetido
 }

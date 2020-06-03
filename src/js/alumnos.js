@@ -1,8 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const modelo = require('./modelo');
-const edicionAlumno = require('./edicionAlumno');
-const nuevoAlumno = require('./nuevoAlumno');
+const md5 = require('blueimp-md5');
 const router = express.Router();
 let tipoAlumno = 2;
 let datosAlumnos = [];
@@ -13,7 +12,7 @@ let cursosAlumnos = [];
 
 router.use(bodyParser.urlencoded({ extended: false }));
 
-router.post('/', (request, response) => {
+router.get('/', (request, response) => {
     cargar();
     async function cargar() {
         await infAlumnos();
@@ -21,12 +20,37 @@ router.post('/', (request, response) => {
     }
 });
 
-router.get('/', (request, response) => {
-    cargar();
-    async function cargar() {
-        await infAlumnos();
-        cargarPagina(response);
-    }
+// Edición
+router.post('/edicion', (request, response) => {
+    var nombreAlumno = request.body.nombreA;
+    var apellidosAlumno = request.body.apellidosA;
+    var correoAlumno = request.body.correoA;
+    var asignaturasAlumno = request.body.asignaturasA;
+
+    modelo.editarAlumnos(nombreAlumno, apellidosAlumno, correoAlumno, asignaturasAlumno);
+    response.redirect('/administrador/alumnos');
+    response.end();
+});
+
+// Nuevo
+router.post('/nuevo', (request, response) => {
+    var newUsuarioA = request.body.newUsuarioA;
+    var newNombreA = request.body.newNombreA;
+    var newApellidosA = request.body.newApellidosA;
+    var newPasswordA = md5(request.body.newPasswordA);
+    var newCorreoA = request.body.newCorreoA;
+    var newAsignaturasA = request.body.newAsignaturasA;
+
+    modelo.newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, newCorreoA, newAsignaturasA);
+    response.redirect('/administrador/alumnos');
+    response.end();
+});
+
+// Borrar
+router.post('/borrar', (request, response) => {
+    let alumnoSeleccionado = request.body.selectAlumnos;
+    modelo.borrarAlumnos(alumnoSeleccionado);
+    response.redirect('/administrador/alumnos');
 });
 
 async function infAlumnos() {
@@ -58,8 +82,5 @@ function vaciarArrays() {
     correoAlumnos = [];
     cursosAlumnos = [];
 }
-
-router.use('/edicion', edicionAlumno);
-router.use('/nuevo', nuevoAlumno);
 
 module.exports = router;

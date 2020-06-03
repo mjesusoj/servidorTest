@@ -17,7 +17,7 @@
                     <button class="btn btn-success mt-3 nuevoAlumno" data-toggle="modal" data-target="#nuevo-alumno">
                         <i class="fas fa-plus"></i> Nuevo Alumno
                     </button>
-                    <button class="btn btn-success mt-3 borrarAlumno" data-toggle="modal" data-target="#delete-alumno">
+                    <button class="btn btn-success mt-3 borrarAlumno" data-toggle="modal" data-target="#borrar-alumno">
                         <i class="fas fa-trash-alt iconBorrarAlumno"></i> Borrar
                     </button>
                 </div>
@@ -56,114 +56,150 @@
             </div>
         </div>
     </div>
-    <!-- Perfil usuario -->
-    <%- include('./perfilUsuario.html'); -%>
+    <div class="fuenteModal">
+        <!-- Perfil usuario -->
+        <%- include('./perfilUsuario.html'); -%>
 
-    <!-- Edición alumnos -->
-    <div class="modal fade" id="edicion-alumnos" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edición de Alumnos:</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+        <!-- Edición alumnos -->
+        <div class="modal fade" id="edicion-alumnos" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edición de Alumnos:</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action='/administrador/alumnos/edicion' name="formAlumnos" method="POST">
+                        <input type="hidden" id="idAlumno" name="idAlumno">
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Nombre</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control nombreAlumno" name="nombreA">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Apellidos</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control apellidosAlumno" name="apellidosA">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Correo</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control correoAlumno" name="correoA">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Curso</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control cursoAlumno" name="cursobdA" multiple>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Editar</button>
+                        </div>
+                    </form>
                 </div>
-                <form action='/administrador/alumnos/edicion' name="formAlumnos" method="POST">
-                    <input type="hidden" id="idAlumno" name="idAlumno">
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Nombre</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control nombreAlumno" name="nombreA">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Apellidos</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control apellidosAlumno" name="apellidosA">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Correo</label>
-                            <div class="col-sm-10">
-                                <input type="email" class="form-control correoAlumno" name="correoA">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Curso</label>
-                            <div class="col-sm-10">
-                                <select class="form-control cursoAlumno" name="cursobdA" multiple>
-
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Editar</button>
-                    </div>
-                </form>
             </div>
         </div>
-    </div>
-    <!-- Nuevo alumno -->
-    <div class="modal fade" id="nuevo-alumno" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Nuevo Alumno:</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+        <!-- Nuevo alumno -->
+        <div class="modal fade" id="nuevo-alumno" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Nuevo Alumno:</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action='/administrador/alumnos/nuevo' name="formNuevoAlumno" method="POST">
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Usuario*</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="newUsuarioA" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Nombre*</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="newNombreA" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Apellidos*</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="newApellidosA" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Contraseña*</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" name="newPasswordA" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Correo*</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control" name="newCorreoA" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Asignaturas*</label>
+                                <div class="col-sm-10">
+                                    <select multiple class="form-control" name="newAsignaturasA">
+                                        <option>DIW</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Añadir</button>
+                        </div>
+                    </form>
                 </div>
-                <form action='/administrador/alumnos/nuevo' name="formNuevoAlumno" method="POST">
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Usuario*</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="newUsuarioA" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Nombre*</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="newNombreA" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Apellidos*</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="newApellidosA" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Contraseña*</label>
-                            <div class="col-sm-10">
-                                <input type="password" class="form-control" name="newPasswordA" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Correo*</label>
-                            <div class="col-sm-10">
-                                <input type="email" class="form-control" name="newCorreoA" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Asignaturas*</label>
-                            <div class="col-sm-10">
-                                <select multiple class="form-control" name="newAsignaturasA">
-                                    <option>DIW</option>
+            </div>
+        </div>
+        <!-- Borrar Alumno -->
+        <div class="modal fade" id="borrar-alumno" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Borrar Alumno:</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/administrador/alumnos/borrar" method="post">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect2">Seleccione alumno a borrar</label>
+                                <select class="form-control" name="selectAlumnos">
+                                    <% for(let i=0;i<nombreAlumnos.length;i++){ %>
+                                    <option value=<%= nombreAlumnos[i] %>><%= nombreAlumnos[i] %></option>
+                                    <% } %>
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Añadir</button>
-                    </div>
-                </form>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success borrarAlumno">
+                                <i class="fas fa-trash-alt iconBorrarAlumno"></i> Borrar
+                            </button>
+                            <button type="button" class="btn btn-primary volverAlumno" data-dismiss="modal">
+                                <i class="fas fa-undo"></i> No
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

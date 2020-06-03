@@ -165,7 +165,10 @@
                                 <label class="col-sm-2 col-form-label">Asignaturas*</label>
                                 <div class="col-sm-10">
                                     <select multiple class="form-control" name="newAsignaturasP">
-                                        <option>DIW</option>
+                                        <option>...</option>
+                                        <% for(let i = 0; i < todasAsignaturas.length; i++) { %>
+                                            <option><%= todasAsignaturas[i] %></option>
+                                        <% } %>
                                     </select>
                                 </div>
                             </div>
@@ -173,6 +176,40 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                             <button type="submit" class="btn btn-primary">Añadir</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Borrar Profesor -->
+        <div class="modal fade" id="borrar-profesor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Borrar Profesor:</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/administrador/profesores/borrar" method="post">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect2">Seleccione profesor a borrar</label>
+                                <select class="form-control" name="selectProfesores">
+                                    <% for(let i=0;i<nombreProfesores.length;i++){ %>
+                                        <option value=<%= nombreProfesores[i] %>><%= nombreProfesores[i] %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success borrarProfesor">
+                                <i class="fas fa-trash-alt iconBorrarProfe"></i> Borrar
+                            </button>
+                            <button type="button" class="btn btn-primary volverProfesor" data-dismiss="modal">
+                                <i class="fas fa-undo"></i> No
+                            </button>
                         </div>
                     </form>
                 </div>

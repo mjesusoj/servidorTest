@@ -48,124 +48,126 @@
             </div>
         </div>
     </div>
-    <!-- Perfil Usuario -->
-    <%- include('./perfilUsuario.html'); -%>
+    <div class="fuenteModal">
+        <!-- Perfil Usuario -->
+        <%- include('./perfilUsuario.html'); -%>
 
-    <!-- Edición Curso -->
-    <div class="modal fade" id="list-cursos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Editar Curso</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="/administrador/cursos/edicion" method="post">
-                    <input type="hidden" id="nombreCurso" name="nombreCurso">
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Nombre</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control editNombreCurso" name="editNombreC" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Descripción</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control descripcionCurso" name="descripcionC">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Imagen <i class="fas fa-link"></i></label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control imgCurso" name="imagenC"
-                                    placeholder="inserte link">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Guardar
-                            cambios</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Nuevo Curso -->
-    <div class="modal fade" id="list-nuevo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Nuevo Curso</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="/administrador/cursos/nuevo" method="post">
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Nombre</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control newNombreCurso" name="newNombreC" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Descripción</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control newDescripcionCurso" name="newDescripcionC">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Imagen <i class="fas fa-link"></i></label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control newImgCurso" name="newImagenC"
-                                    placeholder="inserte link">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Añadir</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Borrar Curso -->
-    <div class="modal fade" id="list-cursos-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Borrar Curso</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="/administrador/cursos/borrar" method="post">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="exampleFormControlSelect2">Seleccione curso a borrar</label>
-                            <select class="form-control" name="selectCursos">
-                                <% for(let i=0;i<nombreCursos.length;i++){ %>
-                                <option value=<%= nombreCursos[i] %>><%= nombreCursos[i] %></option>
-                                <% } %>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success borrarCurso">
-                            <i class="fas fa-trash-alt iconBorrarCurso"></i> Borrar
-                        </button>
-                        <button type="button" class="btn btn-primary volverCurso" data-dismiss="modal">
-                            <i class="fas fa-undo"></i> No
+        <!-- Edición Curso -->
+        <div class="modal fade" id="list-cursos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Editar Curso</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                </form>
+                    <form action="/administrador/cursos/edicion" method="post">
+                        <input type="hidden" id="nombreCurso" name="nombreCurso">
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Nombre</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control editNombreCurso" name="editNombreC" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Descripción</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control descripcionCurso" name="descripcionC">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Imagen <i class="fas fa-link"></i></label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control imgCurso" name="imagenC"
+                                        placeholder="inserte link">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Guardar
+                                cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Nuevo Curso -->
+        <div class="modal fade" id="list-nuevo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Nuevo Curso</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/administrador/cursos/nuevo" method="post">
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Nombre</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control newNombreCurso" name="newNombreC" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Descripción</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control newDescripcionCurso" name="newDescripcionC">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Imagen <i class="fas fa-link"></i></label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control newImgCurso" name="newImagenC"
+                                        placeholder="inserte link">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Añadir</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Borrar Curso -->
+        <div class="modal fade" id="list-cursos-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Borrar Curso</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/administrador/cursos/borrar" method="post">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect2">Seleccione curso a borrar</label>
+                                <select class="form-control" name="selectCursos">
+                                    <% for(let i=0;i<nombreCursos.length;i++){ %>
+                                    <option value=<%= nombreCursos[i] %>><%= nombreCursos[i] %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success borrarCurso">
+                                <i class="fas fa-trash-alt iconBorrarCurso"></i> Borrar
+                            </button>
+                            <button type="button" class="btn btn-primary volverCurso" data-dismiss="modal">
+                                <i class="fas fa-undo"></i> No
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
