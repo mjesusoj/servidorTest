@@ -12,7 +12,7 @@
         <%- include('./navbar.html'); -%>
         <div class="fuente">
             <div class="row float-left botones">
-                <div class="col-12 col-sm-9 col-md-8 mt-4">
+                <div class="col-12 col-sm-12 col-md-8 mt-4">
                     <%- include('./buttons.html'); -%>
                     <button class="btn btn-success mt-3 nuevoAlumno" data-toggle="modal" data-target="#nuevo-alumno">
                         <i class="fas fa-plus"></i> Nuevo Alumno
@@ -22,8 +22,8 @@
                     </button>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12 col-md-5 mt-4">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 mt-4">
                     <div class="table-responsive-md">
                         <table class="table">
                             <thead class="thead-dark">
@@ -122,47 +122,49 @@
                     <form action='/administrador/alumnos/nuevo' name="formNuevoAlumno" method="POST">
                         <div class="modal-body">
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Usuario*</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="newUsuarioA" required>
+                                <label class="col-sm-3 col-form-label">Usuario *</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="newUsuarioA" placeholder="Escriba aquí el usuario" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Nombre*</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="newNombreA" required>
+                                <label class="col-sm-3 col-form-label">Nombre *</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="newNombreA" placeholder="Escriba aquí el nombre" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Apellidos*</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="newApellidosA" required>
+                                <label class="col-sm-3 col-form-label">Apellidos *</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="newApellidosA" placeholder="Escriba aquí los apellidos" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Contraseña*</label>
-                                <div class="col-sm-10">
-                                    <input type="password" class="form-control" name="newPasswordA" required>
+                                <label class="col-sm-3 col-form-label">Contraseña*</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control" name="newPasswordA" placeholder="Escriba aquí la contraseña" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Correo*</label>
-                                <div class="col-sm-10">
-                                    <input type="email" class="form-control" name="newCorreoA" required>
+                                <label class="col-sm-3 col-form-label">Correo *</label>
+                                <div class="col-sm-9">
+                                    <input type="email" class="form-control" name="newCorreoA" placeholder="Escriba aquí el correo" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Asignaturas*</label>
-                                <div class="col-sm-10">
-                                    <select multiple class="form-control" name="newAsignaturasA">
-                                        <option>DIW</option>
+                                <label class="col-sm-3 col-form-label">Cursos *</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" name="newCursosA" required>
+                                        <option disabled selected>Ninguno</option>
+                                        <option value="2º-DAM">2º DAM</option>
+                                        <option value="2º-DAW">2º DAW</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary">Añadir</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Añadir</button>
                         </div>
                     </form>
                 </div>
@@ -185,7 +187,7 @@
                                 <label for="exampleFormControlSelect2">Seleccione alumno a borrar</label>
                                 <select class="form-control" name="selectAlumnos">
                                     <% for(let i=0;i<nombreAlumnos.length;i++){ %>
-                                    <option value=<%= nombreAlumnos[i] %>><%= nombreAlumnos[i] %></option>
+                                        <option value=<%= nombreAlumnos[i] %>><%= nombreAlumnos[i] %></option>
                                     <% } %>
                                 </select>
                             </div>

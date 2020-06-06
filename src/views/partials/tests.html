@@ -3,8 +3,8 @@
 
 <head>
     <%- include('./head.html'); -%>
-    <title>Administración - Cursos</title>
-    <link rel="stylesheet" type="text/css" href="../../css/cursos.css">
+    <title>Administración - Tests</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../css/tests.css">
 </head>
 
 <body>
@@ -14,37 +14,34 @@
             <div class="row float-left botones">
                 <div class="col-12 col-sm-9 col-md-8 mt-4">
                     <%- include('./buttons.html'); -%>
-                    <button class="btn btn-success mt-3 nuevoCurso" data-toggle="modal" data-target="#list-nuevo">
-                        <i class="fas fa-plus"></i> Nuevo Curso
+                    <button class="btn btn-success mt-3 nuevaPregunta" data-toggle="modal" data-target="#list-pregunta">
+                        <i class="fas fa-plus"></i> Nueva Pregunta
                     </button>
-                    <button class="btn btn-success mt-3 borrarCurso" data-toggle="modal"
-                        data-target="#list-cursos-delete">
-                        <i class="fas fa-trash-alt iconBorrarCurso"></i> Borrar
+                    <button class="btn btn-success mt-3 borrarPregunta" data-toggle="modal"
+                        data-target="#list-pregunta-delete">
+                        <i class="fas fa-trash-alt iconBorrarCurso"></i> Borrar Pregunta
                     </button>
                 </div>
             </div>
-            <div class="row">
-                <% for(let i=0;i<nombreCursos.length;i++){ %>
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mt-4">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-6 col-md-8 col-lg-9 col-xl-10 mt-4">
                     <div class="card">
-                        <form class="formularioCursos" action="/administrador/cursos/curso" method="GET">
-                            <input type="hidden" name="nombre" value=<%= nombreCursos[i] %>>
-                            <img class="img-fluid imagenCurso card-img-top" src=<%= imgCursos[i] %>>
+                        <form class="formularioTests" action="" method="GET">
                             <div class="card-body">
-                                <h5 class="card-title mt-2"><%= nombreCursos[i] %></h5>
-                                <p class="card-text"><%= descripcionCursos[i] %></p>
-                                <button class="btn btn-success editarCurso" data-toggle="modal"
-                                    data-target="#list-cursos" id=<%= nombreCursos[i] %>>
-                                    <i class="fas fa-edit"></i> Editar
-                                </button>
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-sign-in-alt"></i> Ir
+                                <h5 class="card-title text-success">Pregunta 1</h5>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Enunciado</span>
+                                    </div>
+                                    <input class="form-control" placeholder="Escribe el enunciado aquí">
+                                </div>
+                                <button class="btn btn-success mt-4" type="submit">
+                                    <i class="fas fa-plus"></i> Nueva Respuesta
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
-                <% } %>
             </div>
         </div>
     </div>
@@ -67,7 +64,7 @@
                         <input type="hidden" id="nombreCurso" name="nombreCurso">
                         <div class="modal-body">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Nombre *</label>
+                                <label class="col-sm-3 col-form-label">Nombre</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control editNombreCurso" name="editNombreC" required>
                                 </div>
@@ -81,7 +78,8 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Imagen <i class="fas fa-link"></i></label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control imgCurso" name="imagenC">
+                                    <input type="text" class="form-control imgCurso" name="imagenC"
+                                        placeholder="inserte link">
                                 </div>
                             </div>
                         </div>
@@ -108,21 +106,22 @@
                     <form action="/administrador/cursos/nuevo" method="post">
                         <div class="modal-body">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Nombre *</label>
+                                <label class="col-sm-3 col-form-label">Nombre</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control newNombreCurso" name="newNombreC" placeholder="Escriba aquí el nombre" required>
+                                    <input type="text" class="form-control newNombreCurso" name="newNombreC" required>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Descripción</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control newDescripcionCurso" placeholder="Escriba aquí la descripción" name="newDescripcionC">
+                                    <input type="text" class="form-control newDescripcionCurso" name="newDescripcionC">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Imagen <i class="fas fa-link"></i></label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control newImgCurso" name="newImagenC" placeholder="Inserte aquí link">
+                                    <input type="text" class="form-control newImgCurso" name="newImagenC"
+                                        placeholder="inserte link">
                                 </div>
                             </div>
                         </div>
@@ -135,39 +134,6 @@
             </div>
         </div>
         <!-- Borrar Curso -->
-        <div class="modal fade" id="list-cursos-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Borrar Curso</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form action="/administrador/cursos/borrar" method="post">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="exampleFormControlSelect2">Seleccione curso a borrar</label>
-                                <select class="form-control" name="selectCursos">
-                                    <% for(let i=0;i<nombreCursos.length;i++){ %>
-                                    <option value=<%= nombreCursos[i] %>><%= nombreCursos[i] %></option>
-                                    <% } %>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-success borrarCurso">
-                                <i class="fas fa-trash-alt iconBorrarCurso"></i> Borrar
-                            </button>
-                            <button type="button" class="btn btn-primary volverCurso" data-dismiss="modal">
-                                <i class="fas fa-undo"></i> No
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
     <%- include('./scripts.html'); -%>
     <script src="../js/rellenarDatos.js"></script>

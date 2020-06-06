@@ -12,7 +12,7 @@
         <%- include('./navbar.html'); -%>
         <div class="fuente">
             <div class="row float-left botones">
-                <div class="col-12 col-sm-9 col-md-8 mt-4">
+                <div class="col-12 col-sm-12 col-md-8 mt-4">
                     <%- include('./buttons.html'); -%>
                     <button class="btn btn-success mt-3 nuevoProfe" data-toggle="modal" data-target="#nuevo-profesor">
                         <i class="fas fa-plus"></i> Nuevo Profesor
@@ -22,8 +22,8 @@
                     </button>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12 col-md-5 mt-4">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 mt-4">
                     <div class="table-responsive-md">
                         <table class="table">
                             <thead class="thead-dark">
@@ -132,40 +132,40 @@
                     <form action='/administrador/profesores/nuevo' name="formNuevoProfesor" method="POST">
                         <div class="modal-body">
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Usuario*</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="newUsuarioP" required>
+                                <label class="col-sm-3 col-form-label">Usuario *</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="newUsuarioP" placeholder="Escriba aquí el usuario" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Nombre*</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="newNombreP" required>
+                                <label class="col-sm-3 col-form-label">Nombre *</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="newNombreP" placeholder="Escriba aquí el nombre" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Apellidos*</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="newApellidosP" required>
+                                <label class="col-sm-3 col-form-label">Apellidos *</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="newApellidosP" placeholder="Escriba aquí los apellidos" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Contraseña*</label>
-                                <div class="col-sm-10">
-                                    <input type="password" class="form-control" name="newPasswordP" required>
+                                <label class="col-sm-3 col-form-label">Contraseña*</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control" name="newPasswordP" placeholder="Escriba aquí la contraseña" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Correo*</label>
-                                <div class="col-sm-10">
-                                    <input type="email" class="form-control" name="newCorreoP" required>
+                                <label class="col-sm-3 col-form-label">Correo *</label>
+                                <div class="col-sm-9">
+                                    <input type="email" class="form-control" name="newCorreoP" placeholder="Escriba aquí el correo" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Asignaturas*</label>
-                                <div class="col-sm-10">
-                                    <select multiple class="form-control" name="newAsignaturasP">
-                                        <option>...</option>
+                                <label class="col-sm-3 col-form-label">Asignaturas*</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" name="newAsignaturasP" required>
+                                        <option disabled selected value="-1">Seleccione una asignatura</option>
                                         <% for(let i = 0; i < todasAsignaturas.length; i++) { %>
                                             <option><%= todasAsignaturas[i] %></option>
                                         <% } %>
@@ -175,7 +175,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary">Añadir</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Añadir</button>
                         </div>
                     </form>
                 </div>

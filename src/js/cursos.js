@@ -145,7 +145,7 @@ router.get('/curso/asignatura/tema/borrar', (request, response) => {
 
 // Test
 router.get('/curso/asignatura/tema/test', (request, response) => {
-    
+    cargarPaginaTests(response);
 });
 
 // Nuevo test
@@ -285,6 +285,15 @@ function cargarTests(response) {
         direccionJSEdicion: '/administrador/cursos/curso/asignatura/tema/test/edicion',
         direccionJSNueva: '/administrador/cursos/curso/asignatura/tema/test/nuevo',
         direccionJSBorrar: '/administrador/cursos/asignatura/tema/test/borrar'
+    });
+    vaciarArrays();
+    mensajedbVacio = '';
+}
+
+function cargarPaginaTests(response) {
+    response.render('./partials/tests.html', {
+        usuarioPerfil: 'administrador',
+        correoPerfil: 'administrador@admin.com',
     });
     vaciarArrays();
     mensajedbVacio = '';

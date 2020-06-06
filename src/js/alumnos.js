@@ -39,9 +39,8 @@ router.post('/nuevo', (request, response) => {
     var newApellidosA = request.body.newApellidosA;
     var newPasswordA = md5(request.body.newPasswordA);
     var newCorreoA = request.body.newCorreoA;
-    var newAsignaturasA = request.body.newAsignaturasA;
-
-    modelo.newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, newCorreoA, newAsignaturasA);
+    var newCursosA = request.body.newCursosA;
+    modelo.newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, newCorreoA, newCursosA);
     response.redirect('/administrador/alumnos');
     response.end();
 });
@@ -49,6 +48,8 @@ router.post('/nuevo', (request, response) => {
 // Borrar
 router.post('/borrar', (request, response) => {
     let alumnoSeleccionado = request.body.selectAlumnos;
+    console.log(alumnoSeleccionado);
+    
     modelo.borrarAlumnos(alumnoSeleccionado);
     response.redirect('/administrador/alumnos');
 });

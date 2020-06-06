@@ -1,0 +1,68 @@
+#navbar {
+    background-color: darkcyan;
+    font-family: 'News Cycle', sans-serif;
+}
+
+.botones, .fuente, .fuenteModal{
+    font-family: 'Varela Round', sans-serif;
+}
+
+.logo {
+    width: 60px;
+}
+
+.titulo{
+    display: none;
+}
+
+#usuario {
+    margin-top: 10px;
+    color: white;
+}
+
+.iconLogout{
+    color: #FF1110;
+}
+
+#enlace{
+    color: #212529;
+}
+
+#enlace:hover{
+    color: #212529;
+    text-decoration: none;
+}
+
+#list-asignaturas, #list-profesores, #list-alumnos{
+    font-size: 1.1em;
+}
+
+.iconBorrarCurso{
+    color: #f8752a;
+}
+
+@media (min-width: 600px){
+    .titulo{
+        display: block;
+        margin-left: 100px;
+        margin-top: -45px;
+    }    
+    
+    .listBotones {
+        width: 300px;
+    }
+}
+
+
+@media (max-width: 720px){
+    .botones{
+        float: none !important;
+    }    
+}
+
+@media (min-width: 992px){
+    .imagenCurso{
+        max-width: 400px;
+        max-height: 200px;
+    }
+}

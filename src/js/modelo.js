@@ -310,10 +310,20 @@ async function newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, n
 
     remplazarEspacio(newNombreA);
 
-    try {
-        const db = client.db("administraciontest");
-        let collection = db.collection('usuarios');
-        let query = {
+    let query = '';
+
+    console.log(newCursoA);
+    if (newCursoA == undefined) {
+        query = {
+            'tipo': 2,
+            'usuario': newUsuarioA,
+            'nombre': palabraRemplazada,
+            'apellidos': newApellidosA,
+            'password': newPasswordA,
+            'correo': newCorreoA
+        }
+    } else {
+        query = {
             'tipo': 2,
             'usuario': newUsuarioA,
             'nombre': palabraRemplazada,
@@ -323,7 +333,12 @@ async function newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, n
             'cursos': [
                 newCursoA
             ]
-        };
+        }
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('usuarios');
         await collection.insertOne(query);
     } catch (error) {
         console.log(error);
