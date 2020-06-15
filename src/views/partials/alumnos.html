@@ -11,19 +11,33 @@
     <div class="container-fluid">
         <%- include('./navbar.html'); -%>
         <div class="fuente">
-            <div class="row float-left botones">
-                <div class="col-12 col-sm-12 col-md-8 mt-4">
-                    <%- include('./buttons.html'); -%>
-                    <button class="btn btn-success mt-3 nuevoAlumno" data-toggle="modal" data-target="#nuevo-alumno">
-                        <i class="fas fa-plus"></i> Nuevo Alumno
-                    </button>
-                    <button class="btn btn-success mt-3 borrarAlumno" data-toggle="modal" data-target="#borrar-alumno">
-                        <i class="fas fa-trash-alt iconBorrarAlumno"></i> Borrar
-                    </button>
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-4 col-xl-4 mt-2 ml-4 breadCrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href="./">Inicio</a></li>
+                          <li class="breadcrumb-item active" aria-current="page">Alumnos</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-10 mt-4">
+            <div class="row float-left botones">
+                <div class="col-12 col-sm-12 col-md-12 mt-2">
+                    <%- include('./buttons.html'); -%>
+                    <button class="btn btn-success mt-4 nuevoAlumno" data-toggle="modal" data-target="#nuevo-alumno">
+                        <i class="fas fa-plus"></i> Nuevo Alumno
+                    </button>
+                    <button class="btn btn-success mt-4 borrarAlumno" data-toggle="modal" data-target="#borrar-alumno">
+                        <i class="fas fa-trash-alt iconBorrarAlumno"></i> Borrar
+                    </button>
+                    <div class='<%= tipoAlerta %> mt-4'>
+                        <%= mensajedbVacio %>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center contenidoTabla">
+                <div class="col-12 col-md-12 col-lg-10 mt-2">
+                    <h2 class="text-success">Alumnos</h2>
                     <div class="table-responsive-md">
                         <table class="table">
                             <thead class="thead-dark">
@@ -185,7 +199,7 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="exampleFormControlSelect2">Seleccione alumno a borrar</label>
-                                <select class="form-control" name="selectAlumnos">
+                                <select multiple class="form-control" name="selectAlumnos">
                                     <% for(let i=0;i<nombreAlumnos.length;i++){ %>
                                         <option value=<%= nombreAlumnos[i] %>><%= nombreAlumnos[i] %></option>
                                     <% } %>

@@ -20,11 +20,10 @@ app.get('/', (request, response) => {
     }); 
 
     app.use('/', loginRouter);
+    app.use('/css', express.static(__dirname + '/css'));
+    app.use('/img', express.static(__dirname + '/img'));
+    app.use('/js', express.static(__dirname + '/js'));
 });
-
-app.use('/css', express.static(__dirname + '/css'));
-app.use('/img', express.static(__dirname + '/img'));
-app.use('/js', express.static(__dirname + '/js'));
 
 app.listen('8080', () => {
     console.log('Servidor ejecutándose en http://127.0.0.1:8080/');

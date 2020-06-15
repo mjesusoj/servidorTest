@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('./head.html'); -%>
+    <title>Administración - Tests</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../../css/test.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <%- include('./navbar.html'); -%>
+        <div class="fuente">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-4 col-xl-4 mt-2 ml-4 breadCrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href=<%= breadPaginas[0] %>>Inicio</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href=<%= breadPaginas[1] %>>Cursos</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href=<%= breadPaginas[2] %>>Asignaturas</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href=<%= breadPaginas[3] %>>Temas</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                Tests
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="row float-left botones">
+                <div class="col-12 col-sm-12 col-md-8 mt-2">
+                    <%- include('./buttons.html'); -%>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 mb-4">
+                    <div class="card">
+                        <div class="row no-gutters">
+                            <div class="col-12 col-md-2" style="max-width: 200px">
+                                <img class="img-fluid imagenTest" src=<%= imgTest %>>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="card-body">
+                                    <h4 class="text-secondary">Curso: <b><%= nombreCurso %></b></h4>
+                                    <h4 class="text-secondary">Asignatura: <b><%= nombreAsignatura %></b></h4>
+                                    <h4 class="text-secondary">Tema: <b><%= nombreTema %></b></h4>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-3">
+                                <div class="card-body">
+                                    <h1 class="text-success tituloTest"><b><%= tituloTest %></b></h1>
+                                    <button class="btn btn-success" data-toggle="modal" data-target="#insertTest">
+                                        <i class="fas fa-save"></i> Guardar cambios
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-3">
+                                <div class="card-body">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Duración (min)</span>
+                                        </div>
+                                        <input type="number" class="form-control" id="duracionTest" max="360" required
+                                            value=<%= duracionTest %>>
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Nº Preguntas</span>
+                                        </div>
+                                        <input type="number" class="form-control" id="numPreguntasTest" max="360"
+                                            required value=<%= numPreguntasTest %>>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-success implementarCambios" data-toggle="modal"
+                                                data-target="#editNumPreguntas">
+                                                <i class="fas fa-sync-alt"></i> Implementar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <form action="#" method="get" class="formPreguntas">
+                <% for(let i=0;i<numPreguntasTest;i++){ %>
+                <div class="row justify-content-center">
+                    <div class="col-12 col-sm-12 col-md-8 col-lg-10 mt-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title text-success">Pregunta <%= i+1 %></h5>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Enunciado</span>
+                                    </div>
+                                    <input type="text" class="form-control enunciadoPregunta" placeholder="Escribe el enunciado aquí" required>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 mb-4 float-left">
+                                    <label class="col-form-label mt-2">Preguntas Correctas</label>
+                                    <div class="form-row">
+                                        <div class="col-12 col-md-12 mt-2">
+                                            <input type="text" class="form-control correctas" placeholder="Escribe una respuesta correcta">
+                                        </div>
+                                        <div class="col-12 col-md-12 mt-2">
+                                            <input type="text" class="form-control correctas" placeholder="Escribe una respuesta correcta">
+                                        </div>
+                                        <div class="col-12 col-md-12 mt-2">
+                                            <input type="text" class="form-control correctas" placeholder="Escribe una respuesta correcta">
+                                        </div>
+                                        <div class="col-12 col-md-12 mt-2">
+                                            <input type="text" class="form-control correctas" placeholder="Escribe una respuesta correcta">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 mb-4 float-left">
+                                    <label class="col-form-label mt-2">Preguntas Incorrectas</label>
+                                    <div class="form-row">
+                                        <div class="col-12 col-md-12 mt-2">
+                                            <input type="text" class="form-control incorrectas" placeholder="Escribe una respuesta incorrecta">
+                                        </div>
+                                        <div class="col-12 col-md-12 mt-2">
+                                            <input type="text" class="form-control incorrectas" placeholder="Escribe una respuesta incorrecta">
+                                        </div>
+                                        <div class="col-12 col-md-12 mt-2">
+                                            <input type="text" class="form-control incorrectas" placeholder="Escribe una respuesta incorrecta">
+                                        </div>
+                                        <div class="col-12 col-md-12 mt-2">
+                                            <input type="text" class="form-control incorrectas" placeholder="Escribe una respuesta incorrecta">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+                <button type="submit" class="btn btn-outline-light btnPreguntas">Enviar</button>
+            </form>
+        </div>
+    </div>
+    <div class="fuenteModal">
+        <!-- Perfil Usuario -->
+        <%- include('./perfilUsuario.html'); -%>
+        <!-- Cambiar cantidad preguntas Test -->
+        <div class="modal fade" id="editNumPreguntas" tabindex="-1" role="dialog" aria-labelledby="editNumPreguntas"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmación</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="GET" action="/administrador/cursos/curso/asignatura/tema/test/editNumPreguntas">
+                        <input type="hidden" name="duracionT" id="duracionT">
+                        <input type="hidden" name="numPreguntasT" id="numPreguntasT">
+                        <div class="modal-body">
+                            <label>Para realizar este cambio en el número de la preguntas, se perderá todos los datos de
+                                estas.</label>
+                            <div class="alert alert-warning" role="alert">
+                                ¿Estás seguro de continuar?
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                    class="fas fa-times"></i> Cerrar</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Realizar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Guardar cambios -->
+        <div class="modal fade" id="insertTest" tabindex="-1" role="dialog" aria-labelledby="insertTest"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Guardar cambios</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="GET" action="/administrador/cursos/curso/asignatura/tema/test/guardar" id="formGuardar">
+                        <input type="hidden" id="enunciadosTest" name="enunciados">
+                        <input type="hidden" id="correctasTest" name="correctas">
+                        <input type="hidden" id="incorrectasTest" name="incorrectas">
+                        <div class="modal-body">
+                            <label>Para crear el test, pulse en guardar cambios</label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                    class="fas fa-times"></i> Cerrar</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar
+                                cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('./scripts.html'); -%>
+    <script src="../../../../../../js/test.js"></script>
+</body>
+
+</html>

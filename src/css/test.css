@@ -37,8 +37,8 @@
     font-size: 1.1em;
 }
 
-.iconBorrarCurso{
-    color: #f8752a;
+.tituloTest{
+    font-family: 'News Cycle', sans-serif;
 }
 
 .listBotones {
@@ -84,8 +84,28 @@
 }
 
 @media (min-width: 992px){
-    .imagenCurso{
-        max-width: 400px;
-        max-height: 200px;
+    .imagenTest{
+        max-width: 200px;
+        max-height: 150px;
     }
+}
+
+@media (max-width: 1050px){
+    .botones{
+        float: none !important;
+    }
+}
+
+/* Preguntas Correctas */
+.correctas:focus{
+    color: #212529;
+    border-color: #1a9c1a;
+    box-shadow: 0 0 0 0.2rem #77ce94;
+}
+
+/* Preguntas Incorrectas */
+.incorrectas:focus{
+    color: #212529;
+    border-color: #ff0000;
+    box-shadow: 0 0 0 0.2rem #ff6a6a;
 }

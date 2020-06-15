@@ -37,16 +37,24 @@
     font-size: 1.1em;
 }
 
-.iconBorrarCurso{
-    color: #f8752a;
+.nombreTest{
+    font-family: 'News Cycle', sans-serif;
+}
+
+.guionC{
+    color: #07ac3e;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.guionI{
+    color: #ff6a6a;
+    font-size: 1.2em;
+    font-weight: bold;
 }
 
 .listBotones {
     width: 300px;
-}
-
-.alert{
-    max-width: 300px;
 }
 
 @media (min-width: 600px){
@@ -70,10 +78,6 @@
     .botones{
         float: none !important;
     }
-
-    .alert{
-        max-width: none;
-    }
 }
 
 @media (max-width: 992px){
@@ -84,8 +88,20 @@
 }
 
 @media (min-width: 992px){
-    .imagenCurso{
-        max-width: 400px;
-        max-height: 200px;
+    .imagenTest{
+        max-width: 200px;
+        max-height: 150px;
     }
 }
+
+@media (max-width: 1050px){
+    .botones{
+        float: none !important;
+    }
+}
+
+/* @media (max-width: 1245px){
+    .contenidoTitulos > h5, .duracionTest{
+        font-size: 2vh;
+    } 
+} */

@@ -9,6 +9,8 @@ let nombreAlumnos = [];
 let apellidosAlumnos = [];
 let correoAlumnos = [];
 let cursosAlumnos = [];
+let mensajedbVacio = '';
+let tipoAlerta = '';
 
 router.use(bodyParser.urlencoded({ extended: false }));
 
@@ -26,7 +28,6 @@ router.post('/edicion', (request, response) => {
     var apellidosAlumno = request.body.apellidosA;
     var correoAlumno = request.body.correoA;
     var asignaturasAlumno = request.body.asignaturasA;
-
     modelo.editarAlumnos(nombreAlumno, apellidosAlumno, correoAlumno, asignaturasAlumno);
     response.redirect('/administrador/alumnos');
     response.end();
@@ -48,9 +49,18 @@ router.post('/nuevo', (request, response) => {
 // Borrar
 router.post('/borrar', (request, response) => {
     let alumnoSeleccionado = request.body.selectAlumnos;
-    console.log(alumnoSeleccionado);
-    
-    modelo.borrarAlumnos(alumnoSeleccionado);
+    if (typeof alumnoSeleccionado == 'string') {
+        modelo.borrarAlumnos(alumnoSeleccionado);
+    } else{
+        if (alumnoSeleccionado != undefined){
+            for (let i = 0; i < alumnoSeleccionado.length; i++) {
+                modelo.borrarAlumnos(alumnoSeleccionado[i]);
+            }
+        } else {
+            mensajedbVacio = 'Tiene que elegir un alumno a borrar';
+            tipoAlerta = 'alert alert-danger';
+        }
+    }
     response.redirect('/administrador/alumnos');
 });
 
@@ -62,6 +72,11 @@ async function infAlumnos() {
         correoAlumnos.push(item.correo);
         cursosAlumnos.push(item.cursos);
     });
+
+    if (nombreAlumnos == ''){
+        mensajedbVacio = 'No hay alumnos (Pulsa en "Nuevo Alumno", para añadir uno)';
+        tipoAlerta = 'alert alert-warning';
+    }    
 }
 
 function cargarPagina(response) {
@@ -71,10 +86,13 @@ function cargarPagina(response) {
         nombreAlumnos: nombreAlumnos,
         apellidosAlumnos: apellidosAlumnos,
         correoAlumnos: correoAlumnos,
-        cursosAlumnos: cursosAlumnos
+        cursosAlumnos: cursosAlumnos,
+        mensajedbVacio: mensajedbVacio,
+        tipoAlerta: tipoAlerta
     });
-
     vaciarArrays();
+    mensajedbVacio = '';
+    tipoAlerta = '';
 }
 
 function vaciarArrays() {

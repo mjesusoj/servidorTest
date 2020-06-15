@@ -11,24 +11,38 @@
     <div class="container-fluid">
         <%- include('./navbar.html'); -%>
         <div class="fuente">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-4 col-xl-4 mt-2 ml-4 breadCrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href=<%= breadPaginas[0] %>>Inicio</a></li>
+                          <li class="breadcrumb-item active" aria-current="page">Cursos</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
             <div class="row float-left botones">
-                <div class="col-12 col-sm-9 col-md-8 mt-4">
+                <div class="col-12 col-sm-12 col-md-12 mt-2">
                     <%- include('./buttons.html'); -%>
-                    <button class="btn btn-success mt-3 nuevoCurso" data-toggle="modal" data-target="#list-nuevo">
+                    <button class="btn btn-success mt-4 nuevoCurso" data-toggle="modal" data-target="#list-nuevo">
                         <i class="fas fa-plus"></i> Nuevo Curso
                     </button>
-                    <button class="btn btn-success mt-3 borrarCurso" data-toggle="modal"
+                    <button class="btn btn-success mt-4 borrarCurso" data-toggle="modal"
                         data-target="#list-cursos-delete">
                         <i class="fas fa-trash-alt iconBorrarCurso"></i> Borrar
                     </button>
+                    <div class='<%= tipoAlerta %> mt-4'>
+                        <%= mensajedbVacio %>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <% for(let i=0;i<nombreCursos.length;i++){ %>
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mt-4">
+                <div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-2 mt-2 mb-4">
                     <div class="card">
                         <form class="formularioCursos" action="/administrador/cursos/curso" method="GET">
                             <input type="hidden" name="nombre" value=<%= nombreCursos[i] %>>
+                            <input type="hidden" name="img" value=<%= imgCursos[i] %>>
                             <img class="img-fluid imagenCurso card-img-top" src=<%= imgCursos[i] %>>
                             <div class="card-body">
                                 <h5 class="card-title mt-2"><%= nombreCursos[i] %></h5>
@@ -81,14 +95,13 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Imagen <i class="fas fa-link"></i></label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control imgCurso" name="imagenC">
+                                    <input type="text" class="form-control imgCurso" name="imagenC" placeholder="Inserte link aquí">
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Guardar
-                                cambios</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Guardar cambios</button>
                         </div>
                     </form>
                 </div>
@@ -122,7 +135,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Imagen <i class="fas fa-link"></i></label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control newImgCurso" name="newImagenC" placeholder="Inserte aquí link">
+                                    <input type="text" class="form-control newImgCurso" name="newImagenC" placeholder="Inserte link aquí">
                                 </div>
                             </div>
                         </div>
@@ -149,9 +162,9 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="exampleFormControlSelect2">Seleccione curso a borrar</label>
-                                <select class="form-control" name="selectCursos">
+                                <select multiple class="form-control" name="selectCursos">
                                     <% for(let i=0;i<nombreCursos.length;i++){ %>
-                                    <option value=<%= nombreCursos[i] %>><%= nombreCursos[i] %></option>
+                                        <option value=<%= nombreCursos[i] %>><%= nombreCursos[i] %></option>
                                     <% } %>
                                 </select>
                             </div>
@@ -171,6 +184,7 @@
     </div>
     <%- include('./scripts.html'); -%>
     <script src="../js/rellenarDatos.js"></script>
+    <script src="../js/editarCursos.js"></script>
 </body>
 
 </html>

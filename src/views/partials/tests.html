@@ -11,35 +11,64 @@
     <div class="container-fluid">
         <%- include('./navbar.html'); -%>
         <div class="fuente">
-            <div class="row float-left botones">
-                <div class="col-12 col-sm-9 col-md-8 mt-4">
-                    <%- include('./buttons.html'); -%>
-                    <button class="btn btn-success mt-3 nuevaPregunta" data-toggle="modal" data-target="#list-pregunta">
-                        <i class="fas fa-plus"></i> Nueva Pregunta
-                    </button>
-                    <button class="btn btn-success mt-3 borrarPregunta" data-toggle="modal"
-                        data-target="#list-pregunta-delete">
-                        <i class="fas fa-trash-alt iconBorrarCurso"></i> Borrar Pregunta
-                    </button>
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-4 col-xl-4 mt-2 ml-4 breadCrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <% let breadcrumb = breadActual %>
+                            <%- include(breadcrumb); -%>
+                        </ol>
+                    </nav>
                 </div>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-12 col-sm-6 col-md-8 col-lg-9 col-xl-10 mt-4">
-                    <div class="card">
-                        <form class="formularioTests" action="" method="GET">
-                            <div class="card-body">
-                                <h5 class="card-title text-success">Pregunta 1</h5>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Enunciado</span>
-                                    </div>
-                                    <input class="form-control" placeholder="Escribe el enunciado aquí">
-                                </div>
-                                <button class="btn btn-success mt-4" type="submit">
-                                    <i class="fas fa-plus"></i> Nueva Respuesta
-                                </button>
-                            </div>
-                        </form>
+            <div class="row float-left botones">
+                <div class="col-12 col-sm-12 col-md-12 mt-2">
+                    <%- include('./buttons.html'); -%>
+                    <button class="btn btn-success mt-4 nuevo" data-toggle="modal" data-target="#nuevo">
+                        <i class="fas fa-plus"></i> Nuevo test
+                    </button>
+                    <button class="btn btn-success mt-4 borrar" data-toggle="modal" data-target="#list-delete">
+                        <i class="fas fa-trash-alt iconBorrar"></i> Borrar
+                    </button>
+                    <div class='<%= tipoAlerta %> mt-4'>
+                        <%= mensajedbVacio %>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center contenidoTabla">
+                <div class="col-12 col-md-12 col-lg-10 mt-2">
+                    <h2 class="text-success"><%= nombre1 %></h2>
+                    <div class="table-responsive-md">
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Editar</th>
+                                    <th scope="col">Ir</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(let i=0;i<nombre2.length;i++){ %>
+                                <tr>
+                                    <td><%= nombre2[i] %></td>
+                                    <td>
+                                        <button type="button" class="btn btn-success editar2" data-toggle="modal"
+                                            data-target="#edicion" id=<%= nombre2[i] %>>
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <form method="GET" action="/administrador/cursos/curso/asignatura/tema/test/detalles">
+                                            <input type="hidden" name="nombre" value=<%= nombre2[i] %>>
+                                            <button class="btn btn-primary" type="submit">
+                                                <i class="fas fa-sign-in-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -49,94 +78,107 @@
         <!-- Perfil Usuario -->
         <%- include('./perfilUsuario.html'); -%>
 
-        <!-- Edición Curso -->
-        <div class="modal fade" id="list-cursos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
+        <!-- Edición Test -->
+        <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Editar Curso</h5>
+                        <h5 class="modal-title">Edición de test</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="/administrador/cursos/edicion" method="post">
-                        <input type="hidden" id="nombreCurso" name="nombreCurso">
+                    <form method="GET" action="/administrador/cursos/curso/asignatura/tema/test/edicion">
+                        <input type="hidden" id="nombre2" name="nombre2">
                         <div class="modal-body">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Nombre</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control editNombreCurso" name="editNombreC" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Descripción</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control descripcionCurso" name="descripcionC">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Imagen <i class="fas fa-link"></i></label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control imgCurso" name="imagenC"
-                                        placeholder="inserte link">
+                                <label class="col-sm-2 col-form-label">Nombre</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control nombre2" name="editNombre" required>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Guardar
-                                cambios</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Guardar cambios</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <!-- Nuevo Curso -->
-        <div class="modal fade" id="list-nuevo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <!-- Nuevo Test -->
+        <div class="modal fade" id="nuevo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Nuevo Curso</h5>
+                        <h5 class="modal-title">Nuevo test</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="/administrador/cursos/nuevo" method="post">
+                    <form method="GET" action="/administrador/cursos/curso/asignatura/tema/test/nuevo">
                         <div class="modal-body">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Nombre</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control newNombreCurso" name="newNombreC" required>
+                                <label class="col-sm-12 col-form-label">Nombre: </label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" name="newNombre" placeholder="Escriba el nombre del test" required>
                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Descripción</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control newDescripcionCurso" name="newDescripcionC">
+                                <label class="col-sm-12 col-form-label mt-2">Número de preguntas:</label>
+                                <div class="col-sm-12">
+                                    <input type="number" class="form-control" name="numPreguntas" min="1" value="1" required>
                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Imagen <i class="fas fa-link"></i></label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control newImgCurso" name="newImagenC"
-                                        placeholder="inserte link">
+                                <label class="col-sm-12 col-form-label mt-2">Duración (minutos):</label>
+                                <div class="col-sm-12">
+                                    <input type="number" class="form-control" name="duracionTest" value="20" min="3" max="360" required>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Añadir</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <!-- Borrar Curso -->
+        <!-- Borrar Test -->
+        <div class="modal fade" id="list-delete" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Borrar test</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="GET" action="/administrador/cursos/curso/asignatura/tema/test/borrar">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="seleccionBorrar">Seleccione para borrar</label>
+                                <select multiple class="form-control" name="select">
+                                    <% for(let i=0;i<nombre2.length;i++){ %>
+                                        <option value=<%= nombre2[i] %>><%= nombre2[i] %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success borrar">
+                                <i class="fas fa-trash-alt iconBorrar"></i> Borrar
+                            </button>
+                            <button type="button" class="btn btn-primary volver" data-dismiss="modal">
+                                <i class="fas fa-undo"></i> Volver
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+
     <%- include('./scripts.html'); -%>
-    <script src="../js/rellenarDatos.js"></script>
+    <script src="../../../../js/rellenarDatos.js"></script>
 </body>
 
 </html>

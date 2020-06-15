@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('./head.html'); -%>
+    <title>Administración - Tests Detalles</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../../css/testDetalles.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <%- include('./navbar.html'); -%>
+        <div class="fuente">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-4 col-xl-4 mt-2 ml-4 breadCrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href=<%= breadPaginas[0] %>>Inicio</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href=<%= breadPaginas[1] %>>Cursos</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href=<%= breadPaginas[2] %>>Asignaturas</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href=<%= breadPaginas[3] %>>Temas</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href=<%= breadPaginas[4] %>>Tests</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                Tests Detalles
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="row float-left botones">
+                <div class="col-12 col-sm-12 col-md-12 mt-2">
+                    <%- include('./buttons.html'); -%>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 mb-4">
+                    <div class="card">
+                        <div class="row no-gutters">
+                            <div class="col-12 col-md-2" style="max-width: 200px">
+                                <img class="img-fluid imagenTest" src=<%= imgTest %>>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="card-body contenidoTitulos">
+                                    <h5 class="text-secondary">Curso: <b><%= nombreCurso %></b></h5>
+                                    <h5 class="text-secondary">Asignatura: <b><%= nombreAsignatura %></b></h5>
+                                    <h5 class="text-secondary">Tema: <b><%= nombreTema %></b></h5>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-3">
+                                <div class="card-body">
+                                    <h1 class="text-success nombreTest"><%= nombreTest %></h1>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <div class="card-body">
+                                    <h5 class="text-secondary duracionTest">Duración: <b><%= duracionTest %> minutos</b>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% for(let i=0;i<enunciadosTest.length;i++){ %>
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-12 col-md-8 col-lg-12 col-xl-10 mt-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">Pregunta <%= i+1 %></h5>
+                            <div class="input-group">
+                                <h5 class="enunciadoPregunta"><%= enunciadosTest[i] %></h5>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 mb-4 float-left">
+                                <label class="col-form-label mt-2">Respuestas Correctas</label>
+                                <ul class="nav flex-column">
+                                    <% let arrayC = correctasTest[i].split('|'); %>
+                                    <% for(let i=0;i<arrayC.length-1;i++){ %>
+                                    <% if(arrayC[i] != '') { %>
+                                    <li class="nav-item">
+                                        <h6 class="text-secondary"><span class="guionC">- </span> <%= arrayC[i] %></h6>
+                                    </li>
+                                    <% } %>
+                                    <% } %>
+                                </ul>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 mb-4 float-left">
+                                <label class="col-form-label mt-2">Respuestas Incorrectas</label>
+                                <ul class="nav flex-column">
+                                    <% let arrayI = incorrectasTest[i].split('|'); %>
+                                    <% for(let i=0;i<arrayI.length-1;i++){ %>
+                                    <% if(arrayI[i] != '') { %>
+                                    <li class="nav-item">
+                                        <h6 class="text-secondary"><span class="guionI">- </span><%= arrayI[i] %></h6>
+                                    </li>
+                                    <% } %>
+                                    <% } %>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+    <div class="fuenteModal">
+        <!-- Perfil Usuario -->
+        <%- include('./perfilUsuario.html'); -%>
+    </div>
+    <%- include('./scripts.html'); -%>
+</body>
+
+</html>

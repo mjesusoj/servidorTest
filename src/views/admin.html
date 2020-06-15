@@ -3,28 +3,40 @@
 
 <head>
     <%- include('partials/head.html'); -%>
-    <link rel="stylesheet" type="text/css" href="../../../css/admin.css">
+    <title>Página de Inicio - Administrador</title>
+    <link rel="stylesheet" type="text/css" href="../css/admin.css">
 </head>
 
 <body>
     <div class="container-fluid">
         <!-- Navbar -->
         <%- include('partials/navbar.html'); -%>
-
-        <!-- Perfil -->
-        <%- include('partials/perfilUsuario.html'); -%>
-
-        <!-- Listas -->
-        <div class="row fuente">
-            <div class="col-12 col-md-2 mt-4">
-                <%- include('partials/buttons.html'); -%>
+        <div class="fuente">
+            <!-- Breadcrumb -->
+            <div class="row">
+                <div class="col-12 col-sm-5 col-md-4 mt-2 ml-4">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <!-- Listas -->
+            <div class="row">
+                <div class="col-12 col-md-2 mt-2">
+                    <%- include('partials/buttons.html'); -%>
+                </div>
             </div>
         </div>
+    </div>
+    <div class="fuenteModal">
+        <!-- Perfil -->
+        <%- include('partials/perfilUsuario.html'); -%>
     </div>
 
     <!-- Cargar scripts -->
     <%- include('partials/scripts.html') -%>
-    <script src="../js/editarBotones.js"></script>
 </body>
 
 </html>

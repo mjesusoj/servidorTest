@@ -9,9 +9,12 @@ let datosAsignaturas = '';
 let datosTemas = '';
 let resultadoCurso = '';
 let arrayNombreCurso = [];
+let arrayNombreAsignaturas = [];
+let arrayNombreTemas = [];
 let datosTests = '';
 let palabraRemplazada = '';
 let datosTodasAsignaturas = '';
+let testsDetalles = '';
 
 async function tipoUsuarioMongo(usuario, password, response) {
     const client = await MongoClient.connect(urlMongo, {
@@ -69,8 +72,7 @@ async function infCursos() {
     try {
         const db = client.db("administraciontest");
         let collection = db.collection('cursos');
-        let result = await collection.find().toArray();
-        datosCursos = result;
+        datosCursos = await collection.find().toArray();
 
         arrayNombreCurso = [];
         datosCursos.forEach(function (item, i) {
@@ -85,7 +87,7 @@ async function infCursos() {
 
 async function infUsuarios(numero) {
     if (numero == 0) {
-        datosUsuarios = 'Te crees muy listo eh';
+        datosUsuarios = '';
     } else {
         const client = await MongoClient.connect(urlMongo, {
                 useUnifiedTopology: true
@@ -110,8 +112,7 @@ async function infUsuarios(numero) {
                     'password': 0
                 }
             };
-            let result = await collection.find(query, datos).toArray();
-            datosUsuarios = result;
+            datosUsuarios = await collection.find(query, datos).toArray();
         } catch (error) {
             console.log(error);
         } finally {
@@ -244,9 +245,7 @@ async function borrarAlumnos(alumnoSeleccionado) {
 }
 
 async function newProfesor(newUsuarioP, newNombreP, newApellidosP, newPasswordP, newCorreoP, newAsignaturasP) {
-    const client = await MongoClient.connect(urlMongo, {
-            useUnifiedTopology: true
-        })
+    const client = await MongoClient.connect(urlMongo, { useUnifiedTopology: true })
         .catch(error => {
             console.log(error);
         });
@@ -257,38 +256,59 @@ async function newProfesor(newUsuarioP, newNombreP, newApellidosP, newPasswordP,
 
     remplazarEspacio(newNombreP);
 
-    try {
-        const db = client.db("administraciontest");
-        let collection = db.collection('usuarios');
-        let query = {
+    let query1 = '';
+    let query2 = '';
+    let profesor = '';
+    if (newAsignaturasP == undefined) {
+        query1 = {
+            'tipo': 1,
+            'usuario': newUsuarioP,
+            'nombre': palabraRemplazada,
+            'apellidos': newApellidosP,
+            'password': newPasswordP,
+            'correo': newCorreoP
+        }
+    } else {
+        query1 = {
             'tipo': 1,
             'usuario': newUsuarioP,
             'nombre': palabraRemplazada,
             'apellidos': newApellidosP,
             'password': newPasswordP,
             'correo': newCorreoP,
-            'asignaturas': newAsignaturasP
-        };
-        await collection.insertOne(query);
-    } catch (error) {
-        console.log(error);
-    }
+            'asignaturas': [
+                newAsignaturasP
+            ]
+        }
 
-    let asignaturaCurso = newAsignaturasP.split(' de ');
+        let asignaturaCurso = newAsignaturasP.split(' de ');
 
-    try {
-        const db = client.db("administraciontest");
-        let collection = db.collection('asignaturas');
-        let query = {
+        query2 = {
             nombre: asignaturaCurso[0],
             curso: asignaturaCurso[1]
         }
-        let profesor = {
+
+        profesor = {
             $push: {
                 profesores: newUsuarioP
             }
         }
-        await collection.updateOne(query, profesor);
+
+        // Asignar asignatura a profesor
+        try {
+            const db = client.db("administraciontest");
+            let collection = db.collection('asignaturas');
+            await collection.updateOne(query2, profesor);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    // Crear profesor
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('usuarios');
+        await collection.insertOne(query1);
     } catch (error) {
         console.log(error);
     } finally {
@@ -312,7 +332,6 @@ async function newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, n
 
     let query = '';
 
-    console.log(newCursoA);
     if (newCursoA == undefined) {
         query = {
             'tipo': 2,
@@ -680,8 +699,15 @@ async function infAsignaturas(nombreCurso) {
                 '_id': 0
             }
         };
-        let result = await collection.find(query, asignatura).toArray();
-        datosAsignaturas = result;
+        datosAsignaturas = await collection.find(query, asignatura).toArray();
+        arrayNombreAsignaturas = [];
+        if (Object.values(datosAsignaturas[0]) != '[]') {
+            let array = [];
+            datosAsignaturas.forEach(function (item, i) {
+                array.push(item.asignaturas);
+            })
+            arrayNombreAsignaturas = array[0];
+        }
     } catch (error) {
         console.log(error);
     } finally {
@@ -703,37 +729,53 @@ async function editarAsignatura(nombreCurso, nombreAsignatura, editNombreA) {
 
     remplazarEspacio(editNombreA);
 
+    let repetido = false;
+    arrayNombreAsignaturas.forEach(function (item, i) {
+        console.log(arrayNombreAsignaturas[i] + ' y ' + palabraRemplazada);
+
+        if (arrayNombreAsignaturas[i] == palabraRemplazada) {
+
+            repetido = true;
+        }
+    })
+    console.log(repetido);
+
     try {
-        const db = client.db("administraciontest");
-        let collection = db.collection('cursos');
-        let query = {
-            'nombre': nombreCurso
-        };
-        let newValues = {
-            $set: {
-                'asignaturas': {
-                    $in: [palabraRemplazada]
+        if (repetido == false) {
+
+            const db = client.db("administraciontest");
+            let collection = db.collection('cursos');
+            let query = {
+                'nombre': nombreCurso
+            };
+            let newValues = {
+                $set: {
+                    'asignaturas': {
+                        $in: [palabraRemplazada]
+                    }
                 }
             }
+            await collection.updateOne(query, newValues);
         }
-        await collection.updateOne(query, newValues);
     } catch (error) {
         console.log(error);
     }
 
     try {
-        const db = client.db("administraciontest");
-        let collection = db.collection('asignaturas');
-        let query = {
-            'nombre': nombreAsignatura,
-            'curso': nombreCurso
-        };
-        let newValues = {
-            $set: {
-                'nombre': palabraRemplazada
+        if (repetido == false) {
+            const db = client.db("administraciontest");
+            let collection = db.collection('asignaturas');
+            let query = {
+                'nombre': nombreAsignatura,
+                'curso': nombreCurso
+            };
+            let newValues = {
+                $set: {
+                    'nombre': palabraRemplazada
+                }
             }
+            await collection.updateOne(query, newValues);
         }
-        await collection.updateOne(query, newValues);
     } catch (error) {
         console.log(error);
     } finally {
@@ -754,39 +796,45 @@ async function newAsignatura(nombreCurso, nombreAsignatura) {
     }
 
     remplazarEspacio(nombreAsignatura);
-
-    // Le insertamos una nueva asignatura al curso
-    try {
-        const db = client.db("administraciontest");
-        let collection = db.collection('cursos');
-        let query = {
-            'nombre': nombreCurso
-        };
-        let newAsignatura = {
-            $push: {
-                'asignaturas': palabraRemplazada
+    console.log(arrayNombreAsignaturas);
+    console.log(nombreAsignatura);
+    if (arrayNombreAsignaturas != undefined){
+        let repetido = comprobarRepetido(arrayNombreAsignaturas, palabraRemplazada);
+        // Le insertamos una nueva asignatura al curso
+        try {
+            if (repetido == false) {
+                const db = client.db("administraciontest");
+                let collection = db.collection('cursos');
+                let query = {
+                    'nombre': nombreCurso
+                };
+                let newAsignatura = {
+                    $push: {
+                        'asignaturas': palabraRemplazada
+                    }
+                }
+                await collection.updateOne(query, newAsignatura);
             }
+        } catch (error) {
+            console.log(error);
         }
 
-        await collection.updateOne(query, newAsignatura);
-    } catch (error) {
-        console.log(error);
-    }
-
-    // Insertamos en la colección asignaturas una nueva, identificado con el curso
-    try {
-        const db = client.db("administraciontest");
-        let collection = db.collection('asignaturas');
-        let query = {
-            'nombre': palabraRemplazada,
-            'curso': nombreCurso,
-        };
-
-        await collection.insertOne(query);
-    } catch (error) {
-        console.log(error);
-    } finally {
-        client.close();
+        // Insertamos en la colección asignaturas una nueva, identificado con el curso
+        try {
+            if (repetido == false) {
+                const db = client.db("administraciontest");
+                let collection = db.collection('asignaturas');
+                let query = {
+                    'nombre': palabraRemplazada,
+                    'curso': nombreCurso,
+                };
+                await collection.insertOne(query);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            client.close();
+        }
     }
 }
 
@@ -865,8 +913,15 @@ async function infTemas(nombreCurso, nombreAsignatura) {
                 '_id': 0
             }
         }
-        let result = await collection.find(query, tema).toArray();
-        datosTemas = result;
+        datosTemas = await collection.find(query, tema).toArray();
+        arrayNombreTemas = [];
+        let array = [];
+        if (Object.values(datosAsignaturas[0]) != '[]') {
+            datosTemas.forEach(function (item, i) {
+                array.push(item.temas);
+            })
+            arrayNombreTemas = array[0];
+        }
     } catch (error) {
         console.log(error);
     } finally {
@@ -940,36 +995,39 @@ async function newTema(nombreCurso, nombreAsignatura, nombreTema) {
 
     remplazarEspacio(nombreTema);
 
+    let repetido = comprobarRepetido(arrayNombreTemas, palabraRemplazada);
     // Le insertamos una nueva asignatura al curso
     try {
-        const db = client.db("administraciontest");
-        let collection = db.collection('asignaturas');
-        let query = {
-            'nombre': nombreAsignatura,
-            'curso': nombreCurso
-        };
-        let newTema = {
-            $push: {
-                'temas': palabraRemplazada
+        if (repetido == false) {
+            const db = client.db("administraciontest");
+            let collection = db.collection('asignaturas');
+            let query = {
+                'nombre': nombreAsignatura,
+                'curso': nombreCurso
+            };
+            let newTema = {
+                $push: {
+                    'temas': palabraRemplazada
+                }
             }
+            await collection.updateOne(query, newTema);
         }
-
-        await collection.updateOne(query, newTema);
     } catch (error) {
         console.log(error);
     }
 
     // Le insertamos una nueva asignatura al curso
     try {
-        const db = client.db("administraciontest");
-        let collection = db.collection('temas');
-        let query = {
-            'nombre': palabraRemplazada,
-            'asignatura': nombreAsignatura,
-            'curso': nombreCurso
-        };
-
-        await collection.insertOne(query);
+        if (repetido == false) {
+            const db = client.db("administraciontest");
+            let collection = db.collection('temas');
+            let query = {
+                'nombre': palabraRemplazada,
+                'asignatura': nombreAsignatura,
+                'curso': nombreCurso
+            };
+            await collection.insertOne(query);
+        }
     } catch (error) {
         console.log(error);
     } finally {
@@ -977,7 +1035,7 @@ async function newTema(nombreCurso, nombreAsignatura, nombreTema) {
     }
 }
 
-async function borrarTema(nombreCurso, temaSeleccionado) {
+async function borrarTema(nombreCurso, nombreAsignatura, temaSeleccionado) {
     const client = await MongoClient.connect(urlMongo, {
             useUnifiedTopology: true
         })
@@ -989,24 +1047,22 @@ async function borrarTema(nombreCurso, temaSeleccionado) {
         return;
     }
 
-    remplazarEspacio(temaSeleccionado);
-
     try {
         const db = client.db("administraciontest");
-        let collection = db.collection('cursos');
+        let collection = db.collection('asignaturas');
         let query = {
-            'nombre': temaSeleccionado,
+            'nombre': nombreAsignatura,
             'curso': nombreCurso
         };
-        let newAsignatura = {
+        let tema = {
             $pull: {
-                'asignaturas': {
-                    $in: [palabraRemplazada]
+                'temas': {
+                    $in: [temaSeleccionado]
                 }
             }
         }
 
-        await collection.updateOne(query, newAsignatura);
+        await collection.updateOne(query, tema);
     } catch (error) {
         console.log(error);
     }
@@ -1014,9 +1070,10 @@ async function borrarTema(nombreCurso, temaSeleccionado) {
     // Insertamos en la colección asignaturas una nueva, identificado con el curso
     try {
         const db = client.db("administraciontest");
-        let collection = db.collection('asignaturas');
+        let collection = db.collection('temas');
         let query = {
-            'nombre': palabraRemplazada,
+            'nombre': temaSeleccionado,
+            'asignatura': nombreAsignatura,
             'curso': nombreCurso
         };
 
@@ -1114,7 +1171,7 @@ async function editarTest(nombreCurso, nombreTema, editNombreT) {
     }
 }
 
-async function newTest(nombreCurso, nombreAsignatura, nombreTema, newNombreTest) {
+async function newTest(nombreCurso, nombreAsignatura, nombreTema, tituloTest, duracionTest, enunciados, correctas, incorrectas) {
     const client = await MongoClient.connect(urlMongo, {
             useUnifiedTopology: true
         })
@@ -1126,7 +1183,7 @@ async function newTest(nombreCurso, nombreAsignatura, nombreTema, newNombreTest)
         return;
     }
 
-    remplazarEspacio(newNombreTest);
+    remplazarEspacio(tituloTest);
 
     // Le insertamos una nueva asignatura al curso
     try {
@@ -1137,18 +1194,18 @@ async function newTest(nombreCurso, nombreAsignatura, nombreTema, newNombreTest)
             'asignatura': nombreAsignatura,
             'curso': nombreCurso
         };
-        let newTema = {
+        let newTest = {
             $push: {
                 'tests': palabraRemplazada
             }
         }
 
-        await collection.updateOne(query, newTema);
+        await collection.updateOne(query, newTest);
     } catch (error) {
         console.log(error);
     }
 
-    // Le insertamos una nueva asignatura al curso
+    // Le insertamos los tests
     try {
         const db = client.db("administraciontest");
         let collection = db.collection('tests');
@@ -1156,10 +1213,21 @@ async function newTest(nombreCurso, nombreAsignatura, nombreTema, newNombreTest)
             'nombre': palabraRemplazada,
             'tema': nombreTema,
             'asignatura': nombreAsignatura,
-            'curso': nombreCurso
+            'curso': nombreCurso,
+            'duracion': duracionTest
         };
-
         await collection.insertOne(query);
+
+        for (let i = 0; i < enunciados.length; i++){
+            let newTest = {
+                $push: {
+                    'enunciado': enunciados[i],
+                    'correctas': correctas[i],
+                    'incorrectas': incorrectas[i]
+                }
+            }
+            await collection.updateMany(query, newTest);
+        }
     } catch (error) {
         console.log(error);
     } finally {
@@ -1167,7 +1235,7 @@ async function newTest(nombreCurso, nombreAsignatura, nombreTema, newNombreTest)
     }
 }
 
-async function borrarTest(nombreCurso, temaSeleccionado) {
+async function borrarTest(nombreCurso, nombreAsignatura, nombreTema, testSeleccionado) {
     const client = await MongoClient.connect(urlMongo, {
             useUnifiedTopology: true
         })
@@ -1179,34 +1247,35 @@ async function borrarTest(nombreCurso, temaSeleccionado) {
         return;
     }
 
-    remplazarEspacio(temaSeleccionado);
-
     try {
         const db = client.db("administraciontest");
-        let collection = db.collection('cursos');
+        let collection = db.collection('temas');
         let query = {
-            'nombre': temaSeleccionado,
+            'nombre': nombreTema,
+            'asignatura': nombreAsignatura,
             'curso': nombreCurso
         };
-        let newAsignatura = {
+        let asignatura = {
             $pull: {
-                'asignaturas': {
-                    $in: [palabraRemplazada]
+                'tests': {
+                    $in: [testSeleccionado]
                 }
             }
         }
 
-        await collection.updateOne(query, newAsignatura);
+        await collection.updateOne(query, asignatura);
     } catch (error) {
         console.log(error);
     }
 
-    // Insertamos en la colección asignaturas una nueva, identificado con el curso
+    // Eliminar de la colección tests
     try {
         const db = client.db("administraciontest");
-        let collection = db.collection('asignaturas');
+        let collection = db.collection('tests');
         let query = {
-            'nombre': palabraRemplazada,
+            'nombre': testSeleccionado,
+            'tema': nombreTema,
+            'asignatura': nombreAsignatura,
             'curso': nombreCurso
         };
 
@@ -1218,6 +1287,53 @@ async function borrarTest(nombreCurso, temaSeleccionado) {
     }
 }
 
+async function infTestDetalles(tituloTest, nombreTema, nombreAsignatura, nombreCurso) {
+    const client = await MongoClient.connect(urlMongo, {
+            useUnifiedTopology: true
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    if (!client) {
+        return;
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('tests');
+        let query = {
+            'nombre': tituloTest,
+            'tema': nombreTema,
+            'asignatura': nombreAsignatura,
+            'curso': nombreCurso
+        };
+        let tests = {
+            projection: {
+                '_id': 0,
+                'duracion': 1,
+                'correctas': 1,
+                'enunciado': 1,
+                'incorrectas': 1
+            }
+        }
+        testsDetalles = await collection.find(query, tests).toArray();
+    } catch (error) {
+        console.log(error);
+    } finally {
+        client.close();
+    }
+}
+
+function comprobarRepetido(array, palabraRemplazada) {
+    let repetido = false;
+    array.forEach(function (item, i) {
+        if (array[i] == palabraRemplazada) {
+            repetido = true;
+        }
+    })
+    return repetido;
+}
 async function mostrarCursos() {
     await infCursos();
     return datosCursos;
@@ -1246,6 +1362,11 @@ async function mostrarTemas(nombreCurso, nombreAsignatura) {
 async function mostrarTests(nombreCurso, nombreAsignatura, nombreTema) {
     await infTests(nombreCurso, nombreAsignatura, nombreTema);
     return datosTests;
+}
+
+async function mostrarTestDetalles(tituloTest, nombreTema, nombreAsignatura, nombreCurso) {
+    await infTestDetalles(tituloTest, nombreTema, nombreAsignatura, nombreCurso);
+    return testsDetalles;
 }
 
 /*
@@ -1284,5 +1405,7 @@ module.exports = {
     "borrarTema": borrarTema,
     "mostrarTests": mostrarTests,
     "newTest": newTest,
+    "borrarTest": borrarTest,
+    "mostrarTestDetalles": mostrarTestDetalles,
     "cursoRepetido": cursoRepetido
 }

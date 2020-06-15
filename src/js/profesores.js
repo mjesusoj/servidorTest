@@ -9,6 +9,8 @@ let apellidosProfesores = [];
 let correoProfesores = [];
 let asignaturasProfesores = [];
 let todasAsignaturas = [];
+let mensajedbVacio = '';
+let tipoAlerta = '';
 
 router.use(bodyParser.urlencoded({ extended: false }));
 
@@ -46,7 +48,18 @@ router.post('/nuevo', (request, response) => {
 // Borrar
 router.post('/borrar', (request, response) => {
     let profesorSeleccionado = request.body.selectProfesores;
-    modelo.borrarProfesores(profesorSeleccionado);
+    if (typeof profesorSeleccionado == 'string') {
+        modelo.borrarProfesores(profesorSeleccionado);
+    } else{
+        if (profesorSeleccionado != undefined){
+            for (let i = 0; i < profesorSeleccionado.length; i++) {
+                modelo.borrarProfesores(profesorSeleccionado[i]);
+            }
+        } else {
+            mensajedbVacio = 'Tiene que elegir un profesor a borrar';
+            tipoAlerta = 'alert alert-danger';
+        }
+    }
     response.redirect('/administrador/profesores');
 });
 
@@ -58,6 +71,11 @@ async function infProfesores() {
         correoProfesores.push(item.correo);
         asignaturasProfesores.push(item.asignaturas);
     });
+
+    if (nombreProfesores == ''){
+        mensajedbVacio = 'No hay profesores (Pulsa en "Nuevo Profesor", para añadir uno)';
+        tipoAlerta = 'alert alert-warning';
+    }    
 }
 
 async function infAsignaturas() {
@@ -83,9 +101,13 @@ function cargarPagina(response) {
         apellidosProfesores: apellidosProfesores,
         correoProfesores: correoProfesores,
         asignaturasProfesores: asignaturasProfesores,
-        todasAsignaturas: todasAsignaturas
+        todasAsignaturas: todasAsignaturas,
+        mensajedbVacio: mensajedbVacio,
+        tipoAlerta: tipoAlerta
     });
     vaciarArrays();
+    mensajedbVacio = '';
+    tipoAlerta = '';
 }
 
 function vaciarArrays() {

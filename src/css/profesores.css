@@ -39,6 +39,14 @@
 
 .iconBorrarProfe{
     color: #f8752a;
+}    
+    
+.listBotones {
+    width: 300px;
+}
+
+.alert{
+    max-width: 300px;
 }
 
 @media (min-width: 600px){
@@ -47,21 +55,38 @@
         margin-left: 100px;
         margin-top: -45px;
     }
-
-    .listBotones {
-        width: 300px;
-    }
 }
 
 @media (max-width: 933px){
+    .breadCrumb{
+        margin-left: 0% !important;
+        padding-right: 1em;
+    }
+
+    .listBotones{
+        width: 100%;
+    }
+
     .botones{
         float: none !important;
     }    
+    
+    .alert{
+        max-width: none;
+    }
+
+    .contenidoTabla {
+        margin-top: 3%;
+    }
+
+    .table{
+        margin-top: 15px;
+    }
 }
 
-/* @media (min-width: 992px){
-    .imagenCurso{
-        max-width: 400px;
-        max-height: 200px;
+@media (max-width: 992px){
+    .breadCrumb{
+        padding-right: 1em;
+        margin-left: 0% !important;
     }
-} */
+}
