@@ -118,8 +118,11 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Asignaturas</label>
                                 <div class="col-sm-10">
-                                    <select multiple class="form-control asignaturasbdProfesor" name="asignaturasbdP">
-
+                                    <select class="form-control asignaturasbdProfesor" name="asignaturasbdP">
+                                        <option disabled selected>Ninguna</option>
+                                        <% for(let i = 0; i < todasAsignaturas.length; i++) { %>
+                                            <option><%= todasAsignaturas[i] %></option>
+                                        <% } %>
                                     </select>
                                 </div>
                             </div>
@@ -178,7 +181,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Asignaturas*</label>
                                 <div class="col-sm-9">
-                                    <select class="form-control" name="newAsignaturasP" required>
+                                    <select multiple class="form-control" name="newAsignaturasP" required>
                                         <option disabled selected>Ninguna</option>
                                         <% for(let i = 0; i < todasAsignaturas.length; i++) { %>
                                             <option><%= todasAsignaturas[i] %></option>

@@ -16,19 +16,22 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href=<%= breadPaginas[0] %>>Inicio</a>
+                                <a href='../../../../'>Inicio</a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href=<%= breadPaginas[1] %>>Cursos</a>
+                                <a href='../../../'>Cursos</a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href=<%= breadPaginas[2] %>>Asignaturas</a>
+                                <a href='../../'>Asignaturas</a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href=<%= breadPaginas[3] %>>Temas</a>
+                                <a href='../'>Temas</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="./">Tests</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                Tests
+                                Test
                             </li>
                         </ol>
                     </nav>
@@ -74,7 +77,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Nº Preguntas</span>
                                         </div>
-                                        <input type="number" class="form-control" id="numPreguntasTest" max="360"
+                                        <input type="number" class="form-control" id="numPreguntasTest" min="1" max="1000"
                                             required value=<%= numPreguntasTest %>>
                                         <div class="input-group-append">
                                             <button class="btn btn-success implementarCambios" data-toggle="modal"

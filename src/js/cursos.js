@@ -108,7 +108,7 @@ router.get('/curso/asignatura', (request, response) => {
         nombreAsignatura = request.query.nombre;        
         breadPaginas.push('../../');
         breadPaginas.push('../');
-        breadPaginas.push('./');
+        breadPaginas.push('.');
         cargar();
     } else {
         breadPaginas.push('../../../');
@@ -271,6 +271,12 @@ router.get('/curso/asignatura/tema/test/editNumPreguntas', (request, response) =
     // Cambiar valores antiguos por los nuevos
     duracionTest = request.query.duracionT;
     numPreguntasTest = request.query.numPreguntasT;
+    if (numPreguntasTest < 1) {
+        numPreguntasTest = 1;
+    } else if (numPreguntasTest > 1000) {
+        numPreguntasTest = 1000;
+    }
+    
     if (duracionTest > 360) {
         duracionTest = 360;
     } else if (duracionTest < 3) {
@@ -404,8 +410,7 @@ function cargarTemas(response) {
         breadPaginas: breadPaginas,
         paginaActual: 'Temas',
         breadActual: './breadTemas.html',
-        nombre1: 'Asignatura: ' + nombreAsignatura,
-        nombreAsignatura: nombreAsignatura,
+        nombre1: nombreAsignatura,
         nombre2: nombreTemas,
         tituloEdicion: 'Edición de Tema',
         tituloNew: 'Nuevo Tema',

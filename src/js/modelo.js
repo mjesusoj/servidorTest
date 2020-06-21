@@ -367,15 +367,13 @@ async function newAlumno(newUsuarioA, newNombreA, newApellidosA, newPasswordA, n
 }
 
 async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCurso) {
-    const client = await MongoClient.connect(urlMongo, {
-            useUnifiedTopology: true
-        })
-        .catch(error => {
-            console.log(error);
+    const client = await MongoClient.connect(urlMongo, { useUnifiedTopology: true })
+        .catch(error => { 
+            console.log(error); 
         });
 
-    if (!client) {
-        return;
+    if (!client) { 
+        return; 
     }
 
     remplazarEspacio(editNombreCurso);
@@ -383,7 +381,6 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
     let newValues = '';
 
     if (nombreCurso != palabraRemplazada) {
-
         if (imgCurso != '') {
             newValues = {
                 $set: {
@@ -401,7 +398,6 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
             };
         }
     } else {
-
         if (imgCurso != '') {
             newValues = {
                 $set: {
@@ -419,7 +415,6 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
     }
 
     try {
-
         let repetido = false;
 
         arrayNombreCurso.forEach(function (item, i) {
@@ -436,10 +431,7 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
             let query = {
                 'nombre': nombreCurso
             };
-
             await collection.updateOne(query, newValues);
-        } else {
-            console.log('Repetido');
         }
     } catch (error) {
         console.log(error);
@@ -447,7 +439,7 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
 
     try {
         let repetido = false;
-
+        
         arrayNombreCurso.forEach(function (item, i) {
             if (arrayNombreCurso[i] == palabraRemplazada) {
                 if (nombreCurso != palabraRemplazada) {
@@ -457,22 +449,18 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
         })
 
         if (repetido == false) {
-
             const db = client.db("administraciontest");
             let collection = db.collection('asignaturas');
             let query = {
                 'curso': nombreCurso
             };
             let newValues = '';
-
             newValues = {
                 $set: {
                     'curso': palabraRemplazada,
                 }
             };
             await collection.updateMany(query, newValues);
-        } else {
-            console.log('Repe');
         }
     } catch (error) {
         console.log(error);
@@ -504,8 +492,6 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
                 }
             };
             await collection.updateMany(query, newValues);
-        } else {
-            console.log('Repe');
         }
     } catch (error) {
         console.log(error);
@@ -536,8 +522,6 @@ async function editarCurso(nombreCurso, editNombreCurso, descripcionCurso, imgCu
                 }
             };
             await collection.updateMany(query, newValues);
-        } else {
-            console.log('Repe');
         }
     } catch (error) {
         console.log(error);
@@ -701,7 +685,7 @@ async function infAsignaturas(nombreCurso) {
         };
         datosAsignaturas = await collection.find(query, asignatura).toArray();
         arrayNombreAsignaturas = [];
-        if (Object.values(datosAsignaturas[0]) != '[]') {
+        if ((Object.values(datosAsignaturas[0])).length != 0) {
             let array = [];
             datosAsignaturas.forEach(function (item, i) {
                 array.push(item.asignaturas);
@@ -731,18 +715,13 @@ async function editarAsignatura(nombreCurso, nombreAsignatura, editNombreA) {
 
     let repetido = false;
     arrayNombreAsignaturas.forEach(function (item, i) {
-        console.log(arrayNombreAsignaturas[i] + ' y ' + palabraRemplazada);
-
         if (arrayNombreAsignaturas[i] == palabraRemplazada) {
-
             repetido = true;
         }
     })
-    console.log(repetido);
 
     try {
         if (repetido == false) {
-
             const db = client.db("administraciontest");
             let collection = db.collection('cursos');
             let query = {
@@ -796,8 +775,6 @@ async function newAsignatura(nombreCurso, nombreAsignatura) {
     }
 
     remplazarEspacio(nombreAsignatura);
-    console.log(arrayNombreAsignaturas);
-    console.log(nombreAsignatura);
     if (arrayNombreAsignaturas != undefined){
         let repetido = comprobarRepetido(arrayNombreAsignaturas, palabraRemplazada);
         // Le insertamos una nueva asignatura al curso
@@ -865,13 +842,12 @@ async function borrarAsignatura(nombreCurso, nombreAsignatura) {
                 }
             }
         }
-
         await collection.updateOne(query, newAsignatura);
     } catch (error) {
         console.log(error);
     }
 
-    // Insertamos en la colección asignaturas una nueva, identificado con el curso
+    // Borramos la asignatura
     try {
         const db = client.db("administraciontest");
         let collection = db.collection('asignaturas');
@@ -879,8 +855,33 @@ async function borrarAsignatura(nombreCurso, nombreAsignatura) {
             'nombre': palabraRemplazada,
             'curso': nombreCurso
         };
-
         await collection.deleteOne(query);
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Borrar temas
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('temas');
+        let query = {
+            'curso': nombreCurso,
+            'asignatura': palabraRemplazada
+        };
+        await collection.deleteMany(query);
+    } catch (error) {
+        console.log(error);
+    }
+    
+    // Borrar tests
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('tests');
+        let query = {
+            'curso': nombreCurso,
+            'asignatura': palabraRemplazada
+        };
+        await collection.deleteMany(query);
     } catch (error) {
         console.log(error);
     } finally {
@@ -915,8 +916,8 @@ async function infTemas(nombreCurso, nombreAsignatura) {
         }
         datosTemas = await collection.find(query, tema).toArray();
         arrayNombreTemas = [];
-        let array = [];
-        if (Object.values(datosAsignaturas[0]) != '[]') {
+        if ((Object.values(datosTemas[0])).length != 0) {
+            let array = [];
             datosTemas.forEach(function (item, i) {
                 array.push(item.temas);
             })
@@ -998,6 +999,14 @@ async function newTema(nombreCurso, nombreAsignatura, nombreTema) {
     let repetido = comprobarRepetido(arrayNombreTemas, palabraRemplazada);
     // Le insertamos una nueva asignatura al curso
     try {
+        let repetido = false;
+
+        arrayNombreTemas.forEach(function (item, i) {
+            if (arrayNombreTemas[i] == palabraRemplazada) {
+                repetido = true;
+            }
+        })
+
         if (repetido == false) {
             const db = client.db("administraciontest");
             let collection = db.collection('asignaturas');

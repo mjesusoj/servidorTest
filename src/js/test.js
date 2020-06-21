@@ -50,9 +50,6 @@ $(document).ready(function () {
         $('#enunciadosTest').val(arrayEnunciados);
         $('#correctasTest').val(respuestasCorrectas);
         $('#incorrectasTest').val(respuestasIncorrectas);
-        console.log(arrayEnunciados);
-        console.log(respuestasCorrectas);
-        console.log(respuestasIncorrectas);
 
         function comaEnunciado(texto) {
             let re = /,/gi;
