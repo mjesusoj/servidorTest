@@ -43,7 +43,6 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">Nombre</th>
-                                    <th scope="col">Editar</th>
                                     <th scope="col">Ir</th>
                                 </tr>
                             </thead>
@@ -51,12 +50,6 @@
                                 <% for(let i=0;i<nombre2.length;i++){ %>
                                 <tr>
                                     <td><%= nombre2[i] %></td>
-                                    <td>
-                                        <button type="button" class="btn btn-success editar2" data-toggle="modal"
-                                            data-target="#edicion" id=<%= nombre2[i] %>>
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </td>
                                     <td>
                                         <form method="GET" action="/administrador/cursos/curso/asignatura/tema/test/detalles">
                                             <input type="hidden" name="nombre" value=<%= nombre2[i] %>>
@@ -78,34 +71,6 @@
         <!-- Perfil Usuario -->
         <%- include('./perfilUsuario.html'); -%>
 
-        <!-- Edición Test -->
-        <div class="modal fade" id="edicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edición de test</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form method="GET" action="/administrador/cursos/curso/asignatura/tema/test/edicion">
-                        <input type="hidden" id="nombre2" name="nombre2">
-                        <div class="modal-body">
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Nombre</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control nombre2" name="editNombre" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i> Guardar cambios</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
         <!-- Nuevo Test -->
         <div class="modal fade" id="nuevo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">

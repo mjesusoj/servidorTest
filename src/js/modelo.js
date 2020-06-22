@@ -713,48 +713,74 @@ async function editarAsignatura(nombreCurso, nombreAsignatura, editNombreA) {
 
     remplazarEspacio(editNombreA);
 
-    let repetido = false;
-    arrayNombreAsignaturas.forEach(function (item, i) {
-        if (arrayNombreAsignaturas[i] == palabraRemplazada) {
-            repetido = true;
-        }
-    })
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('cursos');
+        let query = {
+            'nombre': nombreCurso,
+            'asignaturas': nombreAsignatura
+        };
+        let newValues = {
+            $set: {
+                'asignaturas.$': palabraRemplazada
+            }
+        };
+        
+        await collection.updateOne(query, newValues);
+    } catch (error) {
+        console.log(error);
+    } 
 
     try {
-        if (repetido == false) {
-            const db = client.db("administraciontest");
-            let collection = db.collection('cursos');
-            let query = {
-                'nombre': nombreCurso
-            };
-            let newValues = {
-                $set: {
-                    'asignaturas': {
-                        $in: [palabraRemplazada]
-                    }
-                }
+        const db = client.db("administraciontest");
+        let collection = db.collection('asignaturas');
+        let query = {
+            'nombre': nombreAsignatura,
+            'curso': nombreCurso
+        };
+        let newValues = {
+            $set: {
+                'nombre': palabraRemplazada
             }
-            await collection.updateOne(query, newValues);
-        }
+        };
+
+        await collection.updateMany(query, newValues);
     } catch (error) {
         console.log(error);
     }
 
     try {
-        if (repetido == false) {
-            const db = client.db("administraciontest");
-            let collection = db.collection('asignaturas');
-            let query = {
-                'nombre': nombreAsignatura,
-                'curso': nombreCurso
-            };
-            let newValues = {
-                $set: {
-                    'nombre': palabraRemplazada
-                }
+        const db = client.db("administraciontest");
+        let collection = db.collection('temas');
+        let query = {
+            'curso': nombreCurso,
+            'asignatura': nombreAsignatura
+        };
+        let newValues = {
+            $set: {
+                'asignatura': palabraRemplazada
             }
-            await collection.updateOne(query, newValues);
-        }
+        };
+
+        await collection.updateMany(query, newValues);
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('tests');
+        let query = {
+            'asignatura': nombreAsignatura,
+            'curso': nombreCurso
+        };
+        let newValues = {
+            $set: {
+                'asignatura': palabraRemplazada
+            }
+        };
+
+        await collection.updateMany(query, newValues);
     } catch (error) {
         console.log(error);
     } finally {
@@ -930,7 +956,7 @@ async function infTemas(nombreCurso, nombreAsignatura) {
     }
 }
 
-async function editarTema(nombreCurso, nombreTema, editNombreT) {
+async function editarTema(nombreCurso, nombreAsignatura, nombreTema, editNombreT) {
     const client = await MongoClient.connect(urlMongo, {
             useUnifiedTopology: true
         })
@@ -946,35 +972,60 @@ async function editarTema(nombreCurso, nombreTema, editNombreT) {
 
     try {
         const db = client.db("administraciontest");
-        let collection = db.collection('cursos');
+        let collection = db.collection('asignaturas');
         let query = {
-            'nombre': nombreCurso
+            'nombre': nombreAsignatura,
+            'curso': nombreCurso,
+            "temas": nombreTema
         };
         let newValues = {
             $set: {
-                'asignaturas': {
-                    $in: [palabraRemplazada]
-                }
+                'temas.$': palabraRemplazada
             }
-        }
+        };
+        console.log(query)
+        console.log(newValues)
         await collection.updateOne(query, newValues);
     } catch (error) {
         console.log(error);
-    }
+    } 
 
     try {
         const db = client.db("administraciontest");
-        let collection = db.collection('asignaturas');
+        let collection = db.collection('temas');
         let query = {
             'nombre': nombreTema,
+            'asignatura': nombreAsignatura,
             'curso': nombreCurso
         };
         let newValues = {
             $set: {
                 'nombre': palabraRemplazada
             }
-        }
-        await collection.updateOne(query, newValues);
+        };
+
+        console.log(newValues)
+        await collection.updateMany(query, newValues);
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        const db = client.db("administraciontest");
+        let collection = db.collection('tests');
+        let query = {
+            'tema': nombreTema,
+            'asignatura': nombreAsignatura,
+            'curso': nombreCurso
+        };
+        let newValues = {
+            $set: {
+                'tema': palabraRemplazada
+            }
+        };
+
+        console.log(newValues)
+        await collection.updateMany(query, newValues);
     } catch (error) {
         console.log(error);
     } finally {
@@ -1121,58 +1172,6 @@ async function infTests(nombreAsignatura, nombreTema) {
         }
         let result = await collection.find(query, temas).toArray();
         datosTests = result;
-    } catch (error) {
-        console.log(error);
-    } finally {
-        client.close();
-    }
-}
-
-async function editarTest(nombreCurso, nombreTema, editNombreT) {
-    const client = await MongoClient.connect(urlMongo, {
-            useUnifiedTopology: true
-        })
-        .catch(error => {
-            console.log(error);
-        });
-
-    if (!client) {
-        return;
-    }
-
-    remplazarEspacio(editNombreT);
-
-    try {
-        const db = client.db("administraciontest");
-        let collection = db.collection('cursos');
-        let query = {
-            'nombre': nombreCurso
-        };
-        let newValues = {
-            $set: {
-                'asignaturas': {
-                    $in: [palabraRemplazada]
-                }
-            }
-        }
-        await collection.updateOne(query, newValues);
-    } catch (error) {
-        console.log(error);
-    }
-
-    try {
-        const db = client.db("administraciontest");
-        let collection = db.collection('asignaturas');
-        let query = {
-            'nombre': nombreTema,
-            'curso': nombreCurso
-        };
-        let newValues = {
-            $set: {
-                'nombre': palabraRemplazada
-            }
-        }
-        await collection.updateOne(query, newValues);
     } catch (error) {
         console.log(error);
     } finally {
@@ -1410,6 +1409,7 @@ module.exports = {
     "newAsignatura": newAsignatura,
     "borrarAsignatura": borrarAsignatura,
     "mostrarTemas": mostrarTemas,
+    "editarTema": editarTema,
     "newTema": newTema,
     "borrarTema": borrarTema,
     "mostrarTests": mostrarTests,

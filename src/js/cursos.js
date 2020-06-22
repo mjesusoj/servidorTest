@@ -132,8 +132,8 @@ router.get('/curso/asignatura/nueva', (request, response) => {
 
 // Editar las asignaturas de los cursos
 router.get('/curso/asignatura/edicion', (request, response) => {
-    let nombreAsignatura = request.query.nombreAsignatura;
-    let editNombreA = request.query.editNombre;
+    let nombreAsignatura = request.query.nombre2;
+    let editNombreA = request.query.editNombre2;
     modelo.editarAsignatura(nombreCurso, nombreAsignatura, editNombreA);
     response.redirect('/administrador/cursos/curso');
 });
@@ -190,9 +190,9 @@ router.get('/curso/asignatura/tema/nuevo', (request, response) => {
 
 // Editar los temas de las asignaturas
 router.get('/curso/asignatura/tema/edicion', (request, response) => {
-    let nombreTema = request.query.nombreTema;
-    let editNombreT = request.query.editNombre;
-    modelo.editarTema(nombreCurso, nombreTema, editNombreT);
+    let nombreTema = request.query.nombre2;
+    let editNombreT = request.query.editNombre2;
+    modelo.editarTema(nombreCurso, nombreAsignatura, nombreTema, editNombreT);
     response.redirect('/administrador/cursos/curso/asignatura');
 });
 
@@ -455,9 +455,8 @@ function cargarTests(response) {
         tituloNew: 'Nuevo Test',
         tituloBorrar: 'Borrar Test',
         direccionJSNuevaPag: '/administrador/cursos/curso/asignatura/tema/test',
-        direccionJSEdicion: '/administrador/cursos/curso/asignatura/tema/test/edicion',
         direccionJSNueva: '/administrador/cursos/curso/asignatura/tema/test/nuevo',
-        direccionJSBorrar: '/administrador/cursos/curso/asignatura/tema/test/borrar'      ,  
+        direccionJSBorrar: '/administrador/cursos/curso/asignatura/tema/test/borrar',  
         mensajedbVacio: mensajedbVacio,
         tipoAlerta: tipoAlerta,
     });
